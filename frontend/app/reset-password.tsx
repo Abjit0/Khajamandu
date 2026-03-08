@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { 
   View, Text, StyleSheet, SafeAreaView, Image, 
-  TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, Alert 
+  TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, Alert, ActivityIndicator 
 } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router'; // Added useLocalSearchParams
 import CustomInput from '../components/ui/CustomInput';
+import { client } from '../api/client'; 
+import AsyncStorage from '@react-native-async-storage/async-storage'; 
 
 const COLORS = {
   backgroundCream: '#F8F4E9',
@@ -16,26 +18,61 @@ const COLORS = {
 
 export default function ResetPasswordScreen() {
   const router = useRouter();
+  // 1. Get the email passed from the OTP screen
+  const { email } = useLocalSearchParams(); 
+
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false); // Loading state
 
-  const handleResetPassword = () => {
-    // 1. Basic Validation
+  const handleResetPassword = async () => {
+    // Basic Validation
     if (newPassword.trim() === '' || confirmPassword.trim() === '') {
       Alert.alert('Error', 'Please fill in all fields.');
       return;
     }
 
-    // 2. Check if passwords match
     if (newPassword !== confirmPassword) {
-      Alert.alert('Error', 'Passwords do not match. Please try again.');
+      Alert.alert('Error', 'Passwords do not match.');
       return;
     }
 
-    // 3. Success!
-    Alert.alert('Success', 'Your password has been reset successfully!', [
-      { text: 'Login Now', onPress: () => router.replace('/') } // Go to Login
-    ]);
+    if (newPassword.length < 6) {
+      Alert.alert('Error', 'Password must be at least 6 characters long.');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      console.log('🔐 Resetting password for:', email);
+      
+      // 2. CALL THE BACKEND TO SAVE PASSWORD
+      const response = await client.post(`/otp/reset-password`, {
+        email: email, // Use the email from params
+        newPassword: newPassword
+      });
+
+      console.log('📥 Reset password response:', response.data);
+
+      if (response.data.status === "SUCCESS") {
+        // Store the JWT token if provided
+        if (response.data.data?.token) {
+          await AsyncStorage.setItem('authToken', response.data.data.token);
+          await AsyncStorage.setItem('userData', JSON.stringify(response.data.data.user));
+          console.log('🔑 Token stored successfully');
+        }
+        
+        Alert.alert('Success', 'Password saved! You can now login.', [
+          { text: 'Login Now', onPress: () => router.replace('/') } 
+        ]);
+      } else {
+        Alert.alert('Error', response.data.message || "Failed to update password");
+      }
+    } catch (error: any) {
+      console.log('❌ Reset password error:', error.response?.data || error.message);
+      Alert.alert('Error', error.response?.data?.message || 'Could not connect to server.');
+    }
+    setLoading(false);
   };
 
   return (
@@ -45,10 +82,12 @@ export default function ResetPasswordScreen() {
           
           <View style={styles.headerSection}>
             <Text style={styles.headerTitle}>Reset Password</Text>
-            <Text style={styles.headerSubtitle}>Please enter your new password below.</Text>
+            <Text style={styles.headerSubtitle}>
+               {/* Show the email so user knows it's working */}
+               Setting new password for: {email}
+            </Text>
           </View>
 
-          {/* Illustration */}
           <Image 
             source={{ uri: 'https://img.freepik.com/free-vector/reset-password-concept-illustration_114360-7886.jpg' }} 
             style={styles.illustration}
@@ -71,8 +110,16 @@ export default function ResetPasswordScreen() {
           </View>
 
           <View style={styles.buttonSection}>
-            <TouchableOpacity style={styles.mainButton} onPress={handleResetPassword}>
-              <Text style={styles.mainButtonText}>Reset Password</Text>
+            <TouchableOpacity 
+                style={styles.mainButton} 
+                onPress={handleResetPassword}
+                disabled={loading}
+            >
+              {loading ? (
+                <ActivityIndicator color={COLORS.white} />
+              ) : (
+                <Text style={styles.mainButtonText}>Reset Password</Text>
+              )}
             </TouchableOpacity>
           </View>
 

@@ -1,86 +1,98 @@
-import React, { useState } from 'react';
-import { View, TextInput, StyleSheet, TouchableOpacity, Text } from 'react-native';
-import { Feather } from '@expo/vector-icons'; 
+import React from 'react';
+import { View, Text, TextInput, StyleSheet } from 'react-native';
 
 const COLORS = {
   white: '#FFFFFF',
-  grayText: '#8A8A8A',
+  textDark: '#2D2D2D',
   accentOrange: '#E6753A',
-  redError: '#FF4444', // New Error Color
+  textGray: '#8A8A8A',
+  red: '#FF0000',
+  borderColor: '#E8E8E8',
 };
 
+// If using TypeScript, define the interface. If JS, this is ignored.
 interface CustomInputProps {
-  placeholder: string;
   value: string;
   setValue: (text: string) => void;
+  placeholder: string;
   isPassword?: boolean;
   keyboardType?: 'default' | 'email-address' | 'numeric' | 'phone-pad';
-  error?: string; // <--- New Optional Error Prop
+  error?: string;
+  editable?: boolean; // We added this
+  maxLength?: number; // We added this
 }
 
 const CustomInput = ({ 
-  placeholder, 
   value, 
   setValue, 
-  isPassword = false, 
+  placeholder, 
+  isPassword, 
   keyboardType = 'default',
-  error
+  error,
+  editable = true, // Default to true (unlocked)
+  maxLength,
 }: CustomInputProps) => {
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-
   return (
     <View style={styles.container}>
       <View style={[
         styles.inputContainer, 
-        error ? { borderColor: COLORS.redError, borderWidth: 1 } : null // Red border if error
+        error ? styles.inputError : null,
+        !editable ? styles.inputDisabled : null // Add grey style if locked
       ]}>
-        <TextInput
-          style={styles.input}
-          placeholder={placeholder}
-          placeholderTextColor={COLORS.grayText}
+        <TextInput 
           value={value}
           onChangeText={setValue}
-          secureTextEntry={isPassword && !isPasswordVisible}
+          placeholder={placeholder}
+          style={[styles.input, !editable && { color: COLORS.textGray }]} // Grey text if locked
+          secureTextEntry={isPassword}
           keyboardType={keyboardType}
-          autoCapitalize="none"
+          editable={editable} // Pass this down
+          maxLength={maxLength} // Pass this down
+          placeholderTextColor={COLORS.textGray}
         />
-        {isPassword && (
-          <TouchableOpacity onPress={() => setIsPasswordVisible(!isPasswordVisible)} style={styles.iconContainer}>
-            <Feather name={isPasswordVisible ? "eye" : "eye-off"} size={20} color={COLORS.grayText} />
-          </TouchableOpacity>
-        )}
       </View>
-      {/* Show Error Message if it exists */}
-      {error ? <Text style={styles.errorText}>{error}</Text> : null}
+      {error && <Text style={styles.errorText}>{error}</Text>}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 10, // Space between inputs
+    width: '100%',
+    marginBottom: 15,
   },
   inputContainer: {
     backgroundColor: COLORS.white,
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 30,
+    width: '100%',
+    borderColor: COLORS.borderColor,
+    borderWidth: 1,
+    borderRadius: 30, // Matching your rounded design
     paddingHorizontal: 20,
-    height: 60,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 5,
+    paddingVertical: 0, // Remove vertical padding to let TextInput handle it
+    height: 55, // Fixed height for consistency
+    justifyContent: 'center',
   },
-  input: { flex: 1, height: '100%', fontSize: 16, color: '#333' },
-  iconContainer: { padding: 10 },
+  input: {
+    fontSize: 16,
+    color: COLORS.textDark,
+    height: '100%', // Take full height
+    textAlignVertical: 'center', // Center text vertically
+    paddingVertical: 0, // Remove default padding
+    includeFontPadding: false, // Remove extra font padding on Android
+  },
+  inputError: {
+    borderColor: COLORS.red,
+    borderWidth: 1,
+  },
+  inputDisabled: {
+    backgroundColor: '#F0F0F0', // Light grey background when locked
+  },
   errorText: {
-    color: COLORS.redError,
+    color: COLORS.red,
     fontSize: 12,
-    marginLeft: 20,
     marginTop: 5,
-  }
+    marginLeft: 15,
+  },
 });
 
 export default CustomInput;

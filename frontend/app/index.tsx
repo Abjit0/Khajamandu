@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { 
-  View, Text, StyleSheet, SafeAreaView, Image, 
-  TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform 
+  View, Text, StyleSheet, Image, 
+  TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, Alert, ActivityIndicator 
 } from 'react-native';
 import { useRouter } from 'expo-router'; 
-// FIXED PATH: Single dot
 import CustomInput from '../components/ui/CustomInput';
+import { client, authAPI } from '../api/client'; 
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const COLORS = {
   backgroundCream: '#F8F4E9',
@@ -19,6 +20,7 @@ export default function LoginScreen() {
   const router = useRouter(); 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false); 
   
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
@@ -49,12 +51,65 @@ export default function LoginScreen() {
     return isValid;
   };
 
-  const handleLogin = () => {
-    if (validate()) {
-      console.log('Login Success:', email);
-      // FIXED: Added 'as any'
-      router.replace('/home' as any);
+  // --- UPDATED LOGIN FUNCTION ---
+  const handleLogin = async () => {
+    if (!validate()) return;
+
+    setLoading(true);
+    try {
+      console.log('🔐 Attempting login...');
+      
+      const cleanEmail = email.trim().toLowerCase();
+      const cleanPassword = password.trim();
+
+      const response = await client.post(`/otp/login`, {
+        email: cleanEmail,
+        password: cleanPassword
+      });
+
+      console.log('📥 Login response:', response.data);
+
+      if (response.data.status === "SUCCESS") {
+        console.log('✅ Login Success for:', cleanEmail);
+        
+        // Store the JWT token if provided
+        if (response.data.data?.token) {
+          await authAPI.storeAuthData(response.data.data.token, response.data.data.user);
+          console.log('🔑 Token stored successfully');
+        }
+        
+        // Smart redirect based on user role
+        const userRole = response.data.data?.user?.role || 'customer';
+        console.log('👤 User role:', userRole);
+        
+        if (userRole === 'restaurant') {
+          console.log('🍽️ Redirecting to Restaurant Dashboard');
+          router.replace('/restaurant/dashboard' as any);
+        } else if (userRole === 'admin') {
+          console.log('👨‍💼 Redirecting to Admin Panel');
+          router.replace('/admin/dashboard' as any);
+        } else if (userRole === 'rider') {
+          console.log('🚴 Redirecting to Rider Dashboard');
+          router.replace('/rider/dashboard' as any);
+        } else {
+          console.log('🏠 Redirecting to Home');
+          router.replace('/customer/home' as any);
+        }
+      } else {
+        Alert.alert("Login Failed", response.data.message || "Incorrect email or password");
+      }
+    } catch (error: any) {
+      console.log('❌ Login error:', error.response?.data || error.message);
+      
+      if (error.response?.status === 401) {
+        Alert.alert("Login Failed", "Invalid email or password");
+      } else if (error.response?.status === 400) {
+        Alert.alert("Login Failed", error.response.data.message || "Please check your input");
+      } else {
+        Alert.alert("Error", "Login failed. Please try again.");
+      }
     }
+    setLoading(false);
   };
 
   return (
@@ -67,7 +122,6 @@ export default function LoginScreen() {
             <Text style={styles.headerSubtitle}>Login to continue</Text>
           </View>
 
-          {/* FIXED PATH: Single dot */}
           <Image 
            source={require('../assets/images/van.png')}
             style={styles.illustration}
@@ -92,21 +146,28 @@ export default function LoginScreen() {
             
             <TouchableOpacity 
               style={styles.forgotPasswordContainer}
-              // FIXED: Added 'as any'
-              onPress={() => router.push('/forgot-password' as any)}
+              // ✅ Points to your OTP Verification page
+              onPress={() => router.push('/otp-verification' as any)}
             >
               <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
             </TouchableOpacity>
           </View>
 
           <View style={styles.buttonSection}>
-            <TouchableOpacity style={styles.mainButton} onPress={handleLogin}>
-              <Text style={styles.mainButtonText}>Login</Text>
+            <TouchableOpacity 
+                style={styles.mainButton} 
+                onPress={handleLogin}
+                disabled={loading} 
+            >
+              {loading ? (
+                <ActivityIndicator color={COLORS.white} />
+              ) : (
+                <Text style={styles.mainButtonText}>Login</Text>
+              )}
             </TouchableOpacity>
 
             <View style={styles.footerContainer}>
               <Text style={styles.footerText}>Don't have an account? </Text>
-              {/* FIXED: Added 'as any' */}
               <TouchableOpacity onPress={() => router.push('/signup' as any)}>
                 <Text style={styles.footerLink}>Sign Up</Text>
               </TouchableOpacity>

@@ -29,23 +29,23 @@ export default function BottomNavBar() {
       <NavButton 
         icon="home" 
         text="Home" 
-        active={isActive('/home')} 
+        active={isActive('/customer/home')} 
         // CHANGE: Use replace() instead of push()
-        onPress={() => router.replace('/home')} 
+        onPress={() => router.replace('/customer/home')} 
       />
       <NavButton 
         icon="mail-outline" 
         text="Inbox" 
-        active={isActive('/inbox')} 
+        active={isActive('/customer/inbox')} 
         // CHANGE: Use replace() instead of push()
-        onPress={() => router.replace('/inbox')} 
+        onPress={() => router.replace('/customer/inbox')} 
       />
       <NavButton 
         icon="basket-outline" 
         text="Baskets" 
-        active={isActive('/baskets')} 
+        active={isActive('/customer/baskets')} 
         // CHANGE: Use replace() instead of push()
-        onPress={() => router.replace('/baskets')} 
+        onPress={() => router.replace('/customer/baskets')} 
       />
       <NavButton 
         icon="person-outline" 
@@ -57,9 +57,9 @@ export default function BottomNavBar() {
       <NavButton 
         icon="grid-outline" 
         text="More" 
-        active={isActive('/more')} 
+        active={isActive('/customer/more')} 
         // CHANGE: Use replace() instead of push()
-        onPress={() => router.replace('/more')} 
+        onPress={() => router.replace('/customer/more')} 
       />
     </View>
   );

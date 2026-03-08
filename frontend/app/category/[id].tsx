@@ -1,12 +1,12 @@
 import React from 'react';
 import { 
-  View, Text, StyleSheet, SafeAreaView, ScrollView, 
+  View, Text, StyleSheet, ScrollView, 
   Image, TouchableOpacity, Dimensions, Platform 
 } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import BottomNavBar from '../../components/BottomNavBar'; 
-
+import { SafeAreaView } from 'react-native-safe-area-context';
 const { width } = Dimensions.get('window');
 
 const COLORS = {
@@ -24,7 +24,7 @@ interface Restaurant {
   rating: string;
   time: string;
   offer: string;
-  logo: string; // This will be the food/restaurant image
+  logo: string; 
 }
 
 interface CategoryData {
@@ -33,9 +33,8 @@ interface CategoryData {
   restaurants: Restaurant[];
 }
 
-// 2. RICH DATA - Lots of items for scrolling
+// 2. RICH DATA 
 const DATA: Record<string, CategoryData> = {
-  // --- 1. ALL RESTAURANTS (Mix of everything) ---
   'all': {
     title: 'All Restaurants',
     banner: 'https://img.freepik.com/free-photo/restaurant-interior_1127-3394.jpg',
@@ -52,8 +51,6 @@ const DATA: Record<string, CategoryData> = {
       { name: 'Bota Simply Momo', location: 'Kumaripati', rating: '4.0', time: '35 mins', offer: '', logo: 'https://img.freepik.com/free-photo/gyoza-dumplings-with-vegetables_140725-2636.jpg' },
     ]
   },
-
-  // --- 2. OFFERS (Only places with discounts) ---
   'offers': {
     title: 'Restaurant Offers',
     banner: 'https://img.freepik.com/free-vector/flat-design-food-sale-background_23-2149113942.jpg',
@@ -67,8 +64,6 @@ const DATA: Record<string, CategoryData> = {
       { name: 'Biryani Adda', location: 'Putalisadak', rating: '4.4', time: '35 mins', offer: 'Family Pack', logo: 'https://img.freepik.com/free-photo/gourmet-chicken-biryani-with-steamed-basmati-rice-generated-by-ai_188544-13480.jpg' },
     ]
   },
-
-  // --- 3. TASTE BEYOND (Premium/Legendary) ---
   'taste-beyond': {
     title: 'Legendary Restaurants',
     banner: 'https://img.freepik.com/free-photo/delicious-indian-food-tray_23-2148723505.jpg',
@@ -82,8 +77,6 @@ const DATA: Record<string, CategoryData> = {
       { name: 'Old House', location: 'Durbar Marg', rating: '4.7', time: 'Heritage', offer: '', logo: 'https://img.freepik.com/free-photo/cozy-restaurant-interior_140725-6325.jpg' },
     ]
   },
-
-  // --- 4. HOT DEALS (Combos/Cheap) ---
   'hot-deals': {
     title: 'Hot Deals',
     banner: 'https://img.freepik.com/free-vector/hot-deal-banner-design_1017-19597.jpg',
@@ -96,8 +89,6 @@ const DATA: Record<string, CategoryData> = {
       { name: 'Taco Bell', location: 'Thamel', rating: '4.4', time: '20 mins', offer: 'Taco Tuesday', logo: 'https://img.freepik.com/free-photo/mexican-tacos-with-beef-tomato-sauce-salsa_2829-14221.jpg' },
     ]
   },
-
-  // --- DEFAULT FALLBACKS FOR PIZZA/BURGER (Keep these simple) ---
   'pizza': {
     title: 'Pizza Places',
     banner: 'https://img.freepik.com/free-photo/pizza-pizza-filled-with-tomatoes-salami-olives_140725-1200.jpg',
@@ -166,40 +157,61 @@ export default function CategoryListingScreen() {
   );
 }
 
-// --- CARD COMPONENT ---
-const RestaurantCard = ({ data }: { data: Restaurant }) => (
-  <View style={styles.cardContainer}>
-    {/* Left: Food Image */}
-    <View style={styles.logoContainer}>
-        <Image source={{ uri: data.logo }} style={styles.logo} resizeMode="cover" />
-    </View>
-    
-    {/* Right: Info */}
-    <View style={styles.cardContent}>
-        <Text style={styles.resName} numberOfLines={1}>{data.name}</Text>
-        <Text style={styles.resLocation}>{data.location}</Text>
-        
-        <View style={styles.rowInfo}>
-            <Ionicons name="star" size={14} color={COLORS.primaryOrange} />
-            <Text style={styles.ratingText}>{data.rating}</Text>
-            <Text style={styles.pipe}>|</Text>
-            <Text style={styles.deliveryText}>{data.time}</Text>
-        </View>
+// --- CARD COMPONENT (UPDATED STEP 1) ---
+const RestaurantCard = ({ data }: { data: Restaurant }) => {
+  // ✅ 1. Get the router
+  const router = useRouter();
 
-        {data.offer ? (
+  return (
+    // ✅ 2. Wrap in TouchableOpacity and add onPress logic
+    <TouchableOpacity 
+      activeOpacity={0.7} 
+      onPress={() => {
+        router.push({
+          pathname: '/restaurant/[id]', // Navigate to the menu page
+          params: { 
+            id: data.name,       // Send the Name as ID
+            image: data.logo,    // Send Image
+            location: data.location,
+            rating: data.rating
+          } 
+        });
+      }}
+    >
+      <View style={styles.cardContainer}>
+        {/* Left: Food Image */}
+        <View style={styles.logoContainer}>
+            <Image source={{ uri: data.logo }} style={styles.logo} resizeMode="cover" />
+        </View>
+        
+        {/* Right: Info */}
+        <View style={styles.cardContent}>
+            <Text style={styles.resName} numberOfLines={1}>{data.name}</Text>
+            <Text style={styles.resLocation}>{data.location}</Text>
+            
             <View style={styles.rowInfo}>
-                <MaterialCommunityIcons name="gift-outline" size={14} color={COLORS.primaryOrange} />
-                <Text style={styles.offerText}>{data.offer}</Text>
+                <Ionicons name="star" size={14} color={COLORS.primaryOrange} />
+                <Text style={styles.ratingText}>{data.rating}</Text>
+                <Text style={styles.pipe}>|</Text>
+                <Text style={styles.deliveryText}>{data.time}</Text>
             </View>
-        ) : null}
-    </View>
-    
-    {/* Heart Icon */}
-    <TouchableOpacity style={{ padding: 5 }}>
-        <Ionicons name="heart-outline" size={24} color={COLORS.textGray} />
+
+            {data.offer ? (
+                <View style={styles.rowInfo}>
+                    <MaterialCommunityIcons name="gift-outline" size={14} color={COLORS.primaryOrange} />
+                    <Text style={styles.offerText}>{data.offer}</Text>
+                </View>
+            ) : null}
+        </View>
+        
+        {/* Heart Icon */}
+        <TouchableOpacity style={{ padding: 5 }}>
+            <Ionicons name="heart-outline" size={24} color={COLORS.textGray} />
+        </TouchableOpacity>
+      </View>
     </TouchableOpacity>
-  </View>
-);
+  );
+};
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.backgroundCream },
@@ -226,7 +238,6 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   logoContainer: { marginRight: 15 },
-  // Increased size for better food visibility
   logo: { width: 80, height: 80, borderRadius: 12, backgroundColor: '#eee' }, 
   cardContent: { flex: 1 },
   resName: { fontSize: 16, fontWeight: 'bold', color: COLORS.textDark },
