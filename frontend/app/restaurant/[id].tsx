@@ -16,10 +16,10 @@ const COLORS = {
 
 // Mock Menu Items
 const MENU_ITEMS = [
-  { id: '1', name: 'Steam Chicken Momo', price: 250, desc: 'Juicy chicken mince with spices', image: 'https://img.freepik.com/free-photo/dumplings-wooden-board_140725-776.jpg' },
-  { id: '2', name: 'Fried Chicken Momo', price: 280, desc: 'Crispy fried momo with spicy chutney', image: 'https://img.freepik.com/free-photo/gyoza-dumplings-with-vegetables_140725-2636.jpg' },
-  { id: '3', name: 'Jhol Momo', price: 300, desc: 'Served in sesame and peanut soup', image: 'https://img.freepik.com/free-photo/soup-dumplings_1203-9098.jpg' },
-  { id: '4', name: 'Coca Cola', price: 100, desc: 'Chilled 500ml', image: 'https://img.freepik.com/free-photo/fresh-cola-drink-glass_144627-16201.jpg' },
+  { id: '1', name: 'Steam Chicken Momo', price: 250, desc: 'Juicy chicken mince with spices', image: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=400&h=300&fit=crop' },
+  { id: '2', name: 'Fried Chicken Momo', price: 280, desc: 'Crispy fried momo with spicy chutney', image: 'https://images.unsplash.com/photo-1496116218417-1a781b1c416c?w=400&h=300&fit=crop' },
+  { id: '3', name: 'Jhol Momo', price: 300, desc: 'Served in sesame and peanut soup', image: 'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=400&h=300&fit=crop' },
+  { id: '4', name: 'Coca Cola', price: 100, desc: 'Chilled 500ml', image: 'https://images.unsplash.com/photo-1554866585-cd94860890b7?w=400&h=300&fit=crop' },
 ];
 
 export default function RestaurantMenuScreen() {

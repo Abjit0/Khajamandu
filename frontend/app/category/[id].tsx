@@ -37,82 +37,82 @@ interface CategoryData {
 const DATA: Record<string, CategoryData> = {
   'all': {
     title: 'All Restaurants',
-    banner: 'https://img.freepik.com/free-photo/restaurant-interior_1127-3394.jpg',
+    banner: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=400&fit=crop',
     restaurants: [
-      { name: 'Batuki Momo Station', location: 'Jalpa Chowk', rating: '4.5', time: '30 mins', offer: '', logo: 'https://img.freepik.com/free-photo/dumplings-wooden-board_140725-776.jpg' },
-      { name: 'Chicken Station', location: 'Machha Pokhari', rating: '4.2', time: '25 mins', offer: 'Free Coke', logo: 'https://img.freepik.com/free-photo/fried-chicken-leg-with-fries_140725-5028.jpg' },
-      { name: 'Pizza Hut', location: 'Samakhushi', rating: '4.5', time: '40 mins', offer: '', logo: 'https://img.freepik.com/free-photo/pizza-pizza-filled-with-tomatoes-salami-olives_140725-1200.jpg' },
-      { name: 'Burger House', location: 'New Baneshwor', rating: '4.8', time: '35 mins', offer: '15% OFF', logo: 'https://img.freepik.com/free-photo/front-view-burger-stand_141793-15542.jpg' },
-      { name: 'Himalayan Java', location: 'Civil Mall', rating: '4.6', time: '20 mins', offer: '', logo: 'https://img.freepik.com/free-photo/latte-art-coffee-cup-cafe_140725-667.jpg' },
-      { name: 'Fire And Ice Pizzeria', location: 'Thamel', rating: '4.7', time: '45 mins', offer: 'Free Delivery', logo: 'https://img.freepik.com/free-photo/freshly-baked-pizza-with-cut-slice_140725-23.jpg' },
-      { name: 'Roadhouse Cafe', location: 'Boudha', rating: '4.4', time: '50 mins', offer: '', logo: 'https://img.freepik.com/free-photo/delicious-italian-pizza-with-tomato-olives-pepperoni_140725-1317.jpg' },
-      { name: 'Dalle Momo', location: 'Kamaladi', rating: '4.3', time: '30 mins', offer: 'Spicy Deal', logo: 'https://img.freepik.com/free-photo/steamed-dumplings-dim-sum_1339-1296.jpg' },
-      { name: 'KFC Nepal', location: 'Durbar Marg', rating: '4.1', time: '25 mins', offer: 'Meal Box', logo: 'https://img.freepik.com/free-photo/crispy-fried-chicken-plate-with-salad-carrot_1150-20212.jpg' },
-      { name: 'Bota Simply Momo', location: 'Kumaripati', rating: '4.0', time: '35 mins', offer: '', logo: 'https://img.freepik.com/free-photo/gyoza-dumplings-with-vegetables_140725-2636.jpg' },
+      { name: 'Batuki Momo Station', location: 'Jalpa Chowk', rating: '4.5', time: '30 mins', offer: '', logo: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=200&h=200&fit=crop' },
+      { name: 'Chicken Station', location: 'Machha Pokhari', rating: '4.2', time: '25 mins', offer: 'Free Coke', logo: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=200&h=200&fit=crop' },
+      { name: 'Pizza Hut', location: 'Samakhushi', rating: '4.5', time: '40 mins', offer: '', logo: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&h=200&fit=crop' },
+      { name: 'Burger House', location: 'New Baneshwor', rating: '4.8', time: '35 mins', offer: '15% OFF', logo: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=200&h=200&fit=crop' },
+      { name: 'Himalayan Java', location: 'Civil Mall', rating: '4.6', time: '20 mins', offer: '', logo: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=200&h=200&fit=crop' },
+      { name: 'Fire And Ice Pizzeria', location: 'Thamel', rating: '4.7', time: '45 mins', offer: 'Free Delivery', logo: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&h=200&fit=crop' },
+      { name: 'Roadhouse Cafe', location: 'Boudha', rating: '4.4', time: '50 mins', offer: '', logo: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&h=200&fit=crop' },
+      { name: 'Dalle Momo', location: 'Kamaladi', rating: '4.3', time: '30 mins', offer: 'Spicy Deal', logo: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=200&h=200&fit=crop' },
+      { name: 'KFC Nepal', location: 'Durbar Marg', rating: '4.1', time: '25 mins', offer: 'Meal Box', logo: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=200&h=200&fit=crop' },
+      { name: 'Bota Simply Momo', location: 'Kumaripati', rating: '4.0', time: '35 mins', offer: '', logo: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=200&h=200&fit=crop' },
     ]
   },
   'offers': {
     title: 'Restaurant Offers',
-    banner: 'https://img.freepik.com/free-vector/flat-design-food-sale-background_23-2149113942.jpg',
+    banner: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&h=400&fit=crop',
     restaurants: [
-      { name: 'Burger House', location: 'Thamel', rating: '4.8', time: '25 mins', offer: 'Flat 50% OFF', logo: 'https://img.freepik.com/free-photo/front-view-burger-stand_141793-15542.jpg' },
-      { name: 'Batuki Momo', location: 'Baniyatar', rating: '4.5', time: '30 mins', offer: 'Buy 1 Get 1', logo: 'https://img.freepik.com/free-photo/dumplings-wooden-board_140725-776.jpg' },
-      { name: 'Crunchy Fried Chicken', location: 'Gongabu', rating: '4.0', time: '20 mins', offer: 'Combo @ 999', logo: 'https://img.freepik.com/free-photo/fried-chicken-leg-with-fries_140725-5028.jpg' },
-      { name: 'Pizza World', location: 'Kalanki', rating: '3.9', time: '40 mins', offer: 'Free Coke', logo: 'https://img.freepik.com/free-photo/pizza-time-tasty-homemade-traditional-pizza-italian-recipe_144627-42528.jpg' },
-      { name: 'Valley Cold Store', location: 'Balaju', rating: '4.2', time: '15 mins', offer: '10% Cashback', logo: 'https://img.freepik.com/free-photo/raw-chicken-meat_144627-31229.jpg' },
-      { name: 'Sandwich Point', location: 'Thamel', rating: '4.3', time: '25 mins', offer: 'BOGO Deal', logo: 'https://img.freepik.com/free-photo/club-sandwich-with-side-french-fries_140725-1744.jpg' },
-      { name: 'Biryani Adda', location: 'Putalisadak', rating: '4.4', time: '35 mins', offer: 'Family Pack', logo: 'https://img.freepik.com/free-photo/gourmet-chicken-biryani-with-steamed-basmati-rice-generated-by-ai_188544-13480.jpg' },
+      { name: 'Burger House', location: 'Thamel', rating: '4.8', time: '25 mins', offer: 'Flat 50% OFF', logo: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=200&h=200&fit=crop' },
+      { name: 'Batuki Momo', location: 'Baniyatar', rating: '4.5', time: '30 mins', offer: 'Buy 1 Get 1', logo: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=200&h=200&fit=crop' },
+      { name: 'Crunchy Fried Chicken', location: 'Gongabu', rating: '4.0', time: '20 mins', offer: 'Combo @ 999', logo: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=200&h=200&fit=crop' },
+      { name: 'Pizza World', location: 'Kalanki', rating: '3.9', time: '40 mins', offer: 'Free Coke', logo: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&h=200&fit=crop' },
+      { name: 'Valley Cold Store', location: 'Balaju', rating: '4.2', time: '15 mins', offer: '10% Cashback', logo: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=200&h=200&fit=crop' },
+      { name: 'Sandwich Point', location: 'Thamel', rating: '4.3', time: '25 mins', offer: 'BOGO Deal', logo: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=200&h=200&fit=crop' },
+      { name: 'Biryani Adda', location: 'Putalisadak', rating: '4.4', time: '35 mins', offer: 'Family Pack', logo: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=200&h=200&fit=crop' },
     ]
   },
   'taste-beyond': {
     title: 'Legendary Restaurants',
-    banner: 'https://img.freepik.com/free-photo/delicious-indian-food-tray_23-2148723505.jpg',
+    banner: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=400&fit=crop',
     restaurants: [
-      { name: 'Trisara', location: 'Lazimpat', rating: '4.9', time: 'Since 2011', offer: 'Fine Dining', logo: 'https://img.freepik.com/free-photo/restaurant-interior_1127-3394.jpg' },
-      { name: 'Bhumi Restaurant', location: 'Lazimpat', rating: '4.7', time: 'Since 2009', offer: 'Newari Set', logo: 'https://img.freepik.com/free-photo/delicious-indian-food-tray_23-2148723505.jpg' },
-      { name: 'Bajeko Sekuwa', location: 'Battisputali', rating: '4.6', time: 'Since 1990', offer: 'Authentic BBQ', logo: 'https://img.freepik.com/free-photo/grilled-meat-skewers-chicken-shish-kebab-with-zucchini-tomatoes-onions_2829-10953.jpg' },
-      { name: 'Jimbu Thakali', location: 'Tangal', rating: '4.8', time: 'Famous Thakali', offer: '', logo: 'https://img.freepik.com/free-photo/indian-thali-indian-food-style-waiting-be-eaten_1150-16239.jpg' },
-      { name: 'Fire And Ice', location: 'Thamel', rating: '4.8', time: 'Since 1995', offer: 'Italian', logo: 'https://img.freepik.com/free-photo/freshly-baked-pizza-with-cut-slice_140725-23.jpg' },
-      { name: 'Chez Caroline', location: 'Baber Mahal', rating: '4.9', time: 'French Cuisine', offer: '', logo: 'https://img.freepik.com/free-photo/gourmet-dish-with-meat-vegetables_140725-4235.jpg' },
-      { name: 'Old House', location: 'Durbar Marg', rating: '4.7', time: 'Heritage', offer: '', logo: 'https://img.freepik.com/free-photo/cozy-restaurant-interior_140725-6325.jpg' },
+      { name: 'Trisara', location: 'Lazimpat', rating: '4.9', time: 'Since 2011', offer: 'Fine Dining', logo: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=200&h=200&fit=crop' },
+      { name: 'Bhumi Restaurant', location: 'Lazimpat', rating: '4.7', time: 'Since 2009', offer: 'Newari Set', logo: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=200&h=200&fit=crop' },
+      { name: 'Bajeko Sekuwa', location: 'Battisputali', rating: '4.6', time: 'Since 1990', offer: 'Authentic BBQ', logo: 'https://images.unsplash.com/photo-1529042410759-befb1204b468?w=200&h=200&fit=crop' },
+      { name: 'Jimbu Thakali', location: 'Tangal', rating: '4.8', time: 'Famous Thakali', offer: '', logo: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=200&h=200&fit=crop' },
+      { name: 'Fire And Ice', location: 'Thamel', rating: '4.8', time: 'Since 1995', offer: 'Italian', logo: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&h=200&fit=crop' },
+      { name: 'Chez Caroline', location: 'Baber Mahal', rating: '4.9', time: 'French Cuisine', offer: '', logo: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=200&h=200&fit=crop' },
+      { name: 'Old House', location: 'Durbar Marg', rating: '4.7', time: 'Heritage', offer: '', logo: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=200&h=200&fit=crop' },
     ]
   },
   'hot-deals': {
     title: 'Hot Deals',
-    banner: 'https://img.freepik.com/free-vector/hot-deal-banner-design_1017-19597.jpg',
+    banner: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&h=400&fit=crop',
     restaurants: [
-      { name: 'Chicken Station', location: 'Thamel', rating: '4.5', time: '15 mins', offer: 'Combo @ 999', logo: 'https://img.freepik.com/free-photo/fried-chicken-leg-with-fries_140725-5028.jpg' },
-      { name: 'Pizza Hut', location: 'Durbar Marg', rating: '4.2', time: '45 mins', offer: 'Family Meal Deal', logo: 'https://img.freepik.com/free-photo/pizza-pizza-filled-with-tomatoes-salami-olives_140725-1200.jpg' },
-      { name: 'KKFC', location: 'New Road', rating: '4.1', time: '20 mins', offer: 'Bucket Saver', logo: 'https://img.freepik.com/free-photo/crispy-fried-chicken-plate-with-salad-carrot_1150-20212.jpg' },
-      { name: 'Momo Magic', location: 'Basantapur', rating: '4.3', time: '25 mins', offer: 'Platter Deal', logo: 'https://img.freepik.com/free-photo/dumplings-wooden-board_140725-776.jpg' },
-      { name: 'Noodle Box', location: 'Jhamsikhel', rating: '4.0', time: '30 mins', offer: 'Buy 2 Get 1', logo: 'https://img.freepik.com/free-photo/penne-pasta-tomato-sauce-with-chicken-tomatoes-wooden-table_2829-19744.jpg' },
-      { name: 'Taco Bell', location: 'Thamel', rating: '4.4', time: '20 mins', offer: 'Taco Tuesday', logo: 'https://img.freepik.com/free-photo/mexican-tacos-with-beef-tomato-sauce-salsa_2829-14221.jpg' },
+      { name: 'Chicken Station', location: 'Thamel', rating: '4.5', time: '15 mins', offer: 'Combo @ 999', logo: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=200&h=200&fit=crop' },
+      { name: 'Pizza Hut', location: 'Durbar Marg', rating: '4.2', time: '45 mins', offer: 'Family Meal Deal', logo: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&h=200&fit=crop' },
+      { name: 'KKFC', location: 'New Road', rating: '4.1', time: '20 mins', offer: 'Bucket Saver', logo: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=200&h=200&fit=crop' },
+      { name: 'Momo Magic', location: 'Basantapur', rating: '4.3', time: '25 mins', offer: 'Platter Deal', logo: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=200&h=200&fit=crop' },
+      { name: 'Noodle Box', location: 'Jhamsikhel', rating: '4.0', time: '30 mins', offer: 'Buy 2 Get 1', logo: 'https://images.unsplash.com/photo-1612929633738-8fe44f7ec841?w=200&h=200&fit=crop' },
+      { name: 'Taco Bell', location: 'Thamel', rating: '4.4', time: '20 mins', offer: 'Taco Tuesday', logo: 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=200&h=200&fit=crop' },
     ]
   },
   'pizza': {
     title: 'Pizza Places',
-    banner: 'https://img.freepik.com/free-photo/pizza-pizza-filled-with-tomatoes-salami-olives_140725-1200.jpg',
+    banner: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800&h=400&fit=crop',
     restaurants: [
-      { name: 'Wood Fire House', location: 'Baniyatar', rating: '4.5', time: '30 mins', offer: 'Buy 1 Get 1', logo: 'https://img.freepik.com/free-photo/pizza-pizza-filled-with-tomatoes-salami-olives_140725-1200.jpg' },
-      { name: 'Fire And Ice', location: 'Thamel', rating: '4.8', time: '45 mins', offer: 'Authentic', logo: 'https://img.freepik.com/free-photo/freshly-baked-pizza-with-cut-slice_140725-23.jpg' },
-      { name: 'Roadhouse', location: 'Boudha', rating: '4.6', time: '40 mins', offer: '', logo: 'https://img.freepik.com/free-photo/delicious-italian-pizza-with-tomato-olives-pepperoni_140725-1317.jpg' },
-      { name: 'Pizza World', location: 'Kalanki', rating: '4.0', time: '35 mins', offer: '20% Off', logo: 'https://img.freepik.com/free-photo/pizza-time-tasty-homemade-traditional-pizza-italian-recipe_144627-42528.jpg' },
+      { name: 'Wood Fire House', location: 'Baniyatar', rating: '4.5', time: '30 mins', offer: 'Buy 1 Get 1', logo: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&h=200&fit=crop' },
+      { name: 'Fire And Ice', location: 'Thamel', rating: '4.8', time: '45 mins', offer: 'Authentic', logo: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&h=200&fit=crop' },
+      { name: 'Roadhouse', location: 'Boudha', rating: '4.6', time: '40 mins', offer: '', logo: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&h=200&fit=crop' },
+      { name: 'Pizza World', location: 'Kalanki', rating: '4.0', time: '35 mins', offer: '20% Off', logo: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&h=200&fit=crop' },
     ]
   },
   'burger': {
     title: 'Burger Joints',
-    banner: 'https://img.freepik.com/free-photo/front-view-burger-stand_141793-15542.jpg',
+    banner: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&h=400&fit=crop',
     restaurants: [
-      { name: 'Burger House', location: 'New Baneshwor', rating: '4.8', time: '25 mins', offer: 'Free Coke', logo: 'https://img.freepik.com/free-photo/front-view-burger-stand_141793-15542.jpg' },
-      { name: 'Crunchy Burger', location: 'Lazimpat', rating: '4.2', time: '30 mins', offer: '', logo: 'https://img.freepik.com/free-photo/burger-with-melted-cheese_140725-7832.jpg' },
-      { name: 'Workshop Eatery', location: 'Kupondole', rating: '4.7', time: '40 mins', offer: 'Gourmet', logo: 'https://img.freepik.com/free-photo/delicious-burger-with-fresh-ingredients_23-2150857908.jpg' },
+      { name: 'Burger House', location: 'New Baneshwor', rating: '4.8', time: '25 mins', offer: 'Free Coke', logo: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=200&h=200&fit=crop' },
+      { name: 'Crunchy Burger', location: 'Lazimpat', rating: '4.2', time: '30 mins', offer: '', logo: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=200&h=200&fit=crop' },
+      { name: 'Workshop Eatery', location: 'Kupondole', rating: '4.7', time: '40 mins', offer: 'Gourmet', logo: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=200&h=200&fit=crop' },
     ]
   },
   'default': {
     title: 'Restaurants',
-    banner: 'https://img.freepik.com/free-photo/top-view-table-full-delicious-food-composition_23-2149141353.jpg',
+    banner: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=400&fit=crop',
     restaurants: [
-      { name: 'Kathmandu Kitchen', location: 'City Center', rating: '4.3', time: '35 mins', offer: 'Free Delivery', logo: 'https://img.freepik.com/free-photo/restaurant-interior_1127-3394.jpg' }
+      { name: 'Kathmandu Kitchen', location: 'City Center', rating: '4.3', time: '35 mins', offer: 'Free Delivery', logo: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=200&h=200&fit=crop' }
     ]
   }
 };

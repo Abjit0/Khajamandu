@@ -26,7 +26,7 @@ export default function BasketsScreen() {
       restaurant: 'Momo Kathmandu',
       price: 250,
       qty: 2,
-      image: 'https://img.freepik.com/free-photo/dumplings-wooden-board_140725-776.jpg'
+      image: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=200&h=200&fit=crop'
     },
     {
       id: '2',
@@ -34,7 +34,7 @@ export default function BasketsScreen() {
       restaurant: 'Pizza Hub',
       price: 650,
       qty: 1,
-      image: 'https://img.freepik.com/free-photo/pizza-pizza-filled-with-tomatoes-salami-olives_140725-1200.jpg'
+      image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&h=200&fit=crop'
     }
   ]);
 
@@ -52,7 +52,7 @@ export default function BasketsScreen() {
           restaurant: restaurantName,
           price: item.price,
           qty: item.qty,
-          image: item.image || 'https://img.freepik.com/free-photo/delicious-food-table_144627-16201.jpg'
+          image: item.image || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200&h=200&fit=crop'
         }));
         
         setCartItems(formattedItems);

@@ -149,28 +149,28 @@ export default function HomeScreen() {
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.horizontalList}>
             <FoodCircleItem 
                 title="Pizza" 
-                imageUri="https://img.freepik.com/free-photo/pizza-pizza-filled-with-tomatoes-salami-olives_140725-1200.jpg" 
+                imageUri="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&h=200&fit=crop" 
                 onPress={() => router.push('/category/pizza' as any)}
             />
             <FoodCircleItem 
                 title="Burger" 
-                imageUri="https://img.freepik.com/free-photo/front-view-burger-stand_141793-15542.jpg" 
+                imageUri="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=200&h=200&fit=crop" 
                 onPress={() => router.push('/category/burger' as any)}
             />
             <FoodCircleItem 
                 title="Momo" 
-                imageUri="https://img.freepik.com/free-photo/dumplings-wooden-board_140725-776.jpg" 
+                imageUri="https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=200&h=200&fit=crop" 
                 onPress={() => router.push('/category/momo' as any)}
             />
-            <FoodCircleItem title="Biryani" imageUri="https://img.freepik.com/free-photo/gourmet-chicken-biryani-with-steamed-basmati-rice-generated-by-ai_188544-13480.jpg" />
-            <FoodCircleItem title="Sushi" imageUri="https://img.freepik.com/free-photo/japanese-sushi-roll-with-salmon_1203-3453.jpg" />
-            <FoodCircleItem title="Fried Chicken" imageUri="https://img.freepik.com/free-photo/fried-chicken-leg-with-fries_140725-5028.jpg" />
-            <FoodCircleItem title="Pasta" imageUri="https://img.freepik.com/free-photo/penne-pasta-tomato-sauce-with-chicken-tomatoes-wooden-table_2829-19744.jpg" />
-            <FoodCircleItem title="Noodles" imageUri="https://img.freepik.com/free-photo/schezwan-noodles-szechwan-vegetable-hakka-noodles-chow-mein-is-popular-indo-chinese-recipes-served-bowl-plate-with-wooden-chopsticks_466689-74646.jpg" />
-            <FoodCircleItem title="Dessert" imageUri="https://img.freepik.com/free-photo/chocolate-cake-with-chocolate-sprinkles_144627-8056.jpg" />
-            <FoodCircleItem title="Coffee" imageUri="https://img.freepik.com/free-photo/cup-coffee-with-heart-pattern_23-2150699264.jpg" />
-            <FoodCircleItem title="Tacos" imageUri="https://img.freepik.com/free-photo/mexican-tacos-with-beef-tomato-sauce-salsa_2829-14221.jpg" />
-            <FoodCircleItem title="Sandwich" imageUri="https://img.freepik.com/free-photo/club-sandwich-with-side-french-fries_140725-1744.jpg" />
+            <FoodCircleItem title="Biryani" imageUri="https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=200&h=200&fit=crop" />
+            <FoodCircleItem title="Sushi" imageUri="https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=200&h=200&fit=crop" />
+            <FoodCircleItem title="Fried Chicken" imageUri="https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=200&h=200&fit=crop" />
+            <FoodCircleItem title="Pasta" imageUri="https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=200&h=200&fit=crop" />
+            <FoodCircleItem title="Noodles" imageUri="https://images.unsplash.com/photo-1612929633738-8fe44f7ec841?w=200&h=200&fit=crop" />
+            <FoodCircleItem title="Dessert" imageUri="https://images.unsplash.com/photo-1551024506-0bccd828d307?w=200&h=200&fit=crop" />
+            <FoodCircleItem title="Coffee" imageUri="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=200&h=200&fit=crop" />
+            <FoodCircleItem title="Tacos" imageUri="https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=200&h=200&fit=crop" />
+            <FoodCircleItem title="Sandwich" imageUri="https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=200&h=200&fit=crop" />
             <FoodCircleItem title="More" icon="grid" />
           </ScrollView>
         </View>
@@ -180,17 +180,17 @@ export default function HomeScreen() {
            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.horizontalList}>
               <FeaturedCard 
                 title="Momo Kathmandu"
-                imageUri="https://img.freepik.com/free-photo/dumplings-wooden-board_140725-776.jpg"
+                imageUri="https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=300&h=400&fit=crop"
                 rating="4.5"
               />
               <FeaturedCard 
                 title="Pizza Hub"
-                imageUri="https://img.freepik.com/free-photo/pizza-pizza-filled-with-tomatoes-salami-olives_140725-1200.jpg"
+                imageUri="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=300&h=400&fit=crop"
                 rating="4.2"
               />
                <FeaturedCard 
                 title="Burger House"
-                imageUri="https://img.freepik.com/free-photo/front-view-burger-stand_141793-15542.jpg"
+                imageUri="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300&h=400&fit=crop"
                 rating="4.8"
               />
            </ScrollView>
@@ -205,15 +205,15 @@ export default function HomeScreen() {
           <Text style={styles.sectionSubtitle}>Long-standing icons of the culinary scene</Text>
           
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.horizontalList}>
-            <FoodCircleItem title="Trisara" imageUri="https://img.freepik.com/free-photo/restaurant-interior_1127-3394.jpg" />
-            <FoodCircleItem title="Bhumi" imageUri="https://img.freepik.com/free-photo/delicious-indian-food-tray_23-2148723505.jpg" />
-            <FoodCircleItem title="Bajeko" imageUri="https://img.freepik.com/free-photo/grilled-meat-skewers-chicken-shish-kebab-with-zucchini-tomatoes-onions_2829-10953.jpg" />
-            <FoodCircleItem title="Jimbu Thakali" imageUri="https://img.freepik.com/free-photo/indian-thali-indian-food-style-waiting-be-eaten_1150-16239.jpg" />
-            <FoodCircleItem title="Roadhouse" imageUri="https://img.freepik.com/free-photo/delicious-italian-pizza-with-tomato-olives-pepperoni_140725-1317.jpg" />
-            <FoodCircleItem title="Himalayan Java" imageUri="https://img.freepik.com/free-photo/latte-art-coffee-cup-cafe_140725-667.jpg" />
-            <FoodCircleItem title="Dalle" imageUri="https://img.freepik.com/free-photo/steamed-dumplings-dim-sum_1339-1296.jpg" />
-            <FoodCircleItem title="KFC" imageUri="https://img.freepik.com/free-photo/crispy-fried-chicken-plate-with-salad-carrot_1150-20212.jpg" />
-            <FoodCircleItem title="Fire & Ice" imageUri="https://img.freepik.com/free-photo/freshly-baked-pizza-with-cut-slice_140725-23.jpg" />
+            <FoodCircleItem title="Trisara" imageUri="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=200&h=200&fit=crop" />
+            <FoodCircleItem title="Bhumi" imageUri="https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=200&h=200&fit=crop" />
+            <FoodCircleItem title="Bajeko" imageUri="https://images.unsplash.com/photo-1529042410759-befb1204b468?w=200&h=200&fit=crop" />
+            <FoodCircleItem title="Jimbu Thakali" imageUri="https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=200&h=200&fit=crop" />
+            <FoodCircleItem title="Roadhouse" imageUri="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&h=200&fit=crop" />
+            <FoodCircleItem title="Himalayan Java" imageUri="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=200&h=200&fit=crop" />
+            <FoodCircleItem title="Dalle" imageUri="https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=200&h=200&fit=crop" />
+            <FoodCircleItem title="KFC" imageUri="https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=200&h=200&fit=crop" />
+            <FoodCircleItem title="Fire & Ice" imageUri="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&h=200&fit=crop" />
           </ScrollView>
         </View>
 
@@ -226,14 +226,14 @@ export default function HomeScreen() {
             name="NPP Food Services"
             tags="Fast Food"
             location="Maharajgunj | Samakhushi"
-            imageUri="https://img.freepik.com/free-photo/top-view-table-full-delicious-food-composition_23-2149141353.jpg"
+            imageUri="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=600&h=400&fit=crop"
             price="Rs 655"
           />
            <VerticalRestaurantCard 
             name="The Bakery Cafe"
             tags="Cafe, Bakery"
             location="Thamel, Kathmandu"
-            imageUri="https://img.freepik.com/free-photo/croissants-coffee-breakfast_140725-3652.jpg"
+            imageUri="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600&h=400&fit=crop"
             price="Rs 800"
           />
         </View>
