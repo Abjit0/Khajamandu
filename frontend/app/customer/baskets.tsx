@@ -5,6 +5,7 @@ import {
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import BottomNavBar from '../../components/BottomNavBar';
 
 const COLORS = {
@@ -15,33 +16,31 @@ const COLORS = {
   gray: '#8A8A8A',
 };
 
+const CART_STORAGE_KEY = '@basket_cart_items';
+
 export default function BasketsScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
   
-  const [cartItems, setCartItems] = useState([
-    {
-      id: '1',
-      name: 'Chicken Momo',
-      restaurant: 'Momo Kathmandu',
-      price: 250,
-      qty: 2,
-      image: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=200&h=200&fit=crop'
-    },
-    {
-      id: '2',
-      name: 'Margherita Pizza',
-      restaurant: 'Pizza Hub',
-      price: 650,
-      qty: 1,
-      image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&h=200&fit=crop'
-    }
-  ]);
+  const [cartItems, setCartItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Load cart data from restaurant menu if available
+  // Load cart from storage on mount
   useEffect(() => {
-    if (params.data) {
-      try {
+    loadCart();
+  }, []);
+
+  // Load cart data from storage or params
+  const loadCart = async () => {
+    try {
+      // First, check if there's stored cart data
+      const storedCart = await AsyncStorage.getItem(CART_STORAGE_KEY);
+      
+      if (storedCart) {
+        // Use stored cart data
+        setCartItems(JSON.parse(storedCart));
+      } else if (params.data) {
+        // If no stored data, check params (new items from restaurant)
         const restaurantItems = JSON.parse(params.data as string);
         const restaurantName = params.restaurant as string || 'Restaurant';
         
@@ -56,12 +55,34 @@ export default function BasketsScreen() {
         }));
         
         setCartItems(formattedItems);
-      } catch (error) {
-        console.log('Error parsing cart data:', error);
+        // Save to storage
+        await AsyncStorage.setItem(CART_STORAGE_KEY, JSON.stringify(formattedItems));
+      } else {
+        // No data at all - empty cart
         setCartItems([]);
       }
+    } catch (error) {
+      console.log('Error loading cart:', error);
+      setCartItems([]);
+    } finally {
+      setIsLoading(false);
     }
-  }, [params.data, params.restaurant]);
+  };
+
+  // Save cart to storage whenever it changes
+  useEffect(() => {
+    if (!isLoading) {
+      saveCart();
+    }
+  }, [cartItems]);
+
+  const saveCart = async () => {
+    try {
+      await AsyncStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems));
+    } catch (error) {
+      console.log('Error saving cart:', error);
+    }
+  };
 
   const updateQuantity = (id: string, change: number) => {
     setCartItems(items => 
@@ -84,11 +105,23 @@ export default function BasketsScreen() {
     } as any);
   };
 
+  const clearCart = async () => {
+    setCartItems([]);
+    await AsyncStorage.removeItem(CART_STORAGE_KEY);
+  };
+
   return (
     <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
       <View style={styles.header}>
         <Text style={styles.title}>Your Basket</Text>
-        <Text style={styles.subtitle}>{cartItems.length} items</Text>
+        <View style={styles.headerRow}>
+          <Text style={styles.subtitle}>{cartItems.length} items</Text>
+          {cartItems.length > 0 && (
+            <TouchableOpacity onPress={clearCart} style={styles.clearButton}>
+              <Text style={styles.clearButtonText}>Clear All</Text>
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
 
       <ScrollView style={styles.content}>
@@ -168,8 +201,27 @@ export default function BasketsScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.bg },
   header: { padding: 20, alignItems: 'center' },
+  headerRow: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    justifyContent: 'center',
+    marginTop: 4,
+    gap: 12,
+  },
   title: { fontSize: 24, fontWeight: 'bold', color: COLORS.dark },
-  subtitle: { fontSize: 14, color: COLORS.gray, marginTop: 4 },
+  subtitle: { fontSize: 14, color: COLORS.gray },
+  clearButton: {
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: COLORS.primary,
+  },
+  clearButtonText: {
+    fontSize: 12,
+    color: COLORS.primary,
+    fontWeight: '600',
+  },
   content: { flex: 1, paddingHorizontal: 20 },
   
   emptyState: {
