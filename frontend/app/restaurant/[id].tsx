@@ -16,10 +16,53 @@ const COLORS = {
 
 // Mock Menu Items
 const MENU_ITEMS = [
+  // APPETIZERS & STARTERS
   { id: '1', name: 'Steam Chicken Momo', price: 250, desc: 'Juicy chicken mince with spices', image: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=400&h=300&fit=crop' },
   { id: '2', name: 'Fried Chicken Momo', price: 280, desc: 'Crispy fried momo with spicy chutney', image: 'https://images.unsplash.com/photo-1496116218417-1a781b1c416c?w=400&h=300&fit=crop' },
   { id: '3', name: 'Jhol Momo', price: 300, desc: 'Served in sesame and peanut soup', image: 'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=400&h=300&fit=crop' },
-  { id: '4', name: 'Coca Cola', price: 100, desc: 'Chilled 500ml', image: 'https://images.unsplash.com/photo-1554866585-cd94860890b7?w=400&h=300&fit=crop' },
+  { id: '4', name: 'Veg Steam Momo', price: 200, desc: 'Fresh vegetables wrapped in thin dough', image: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=400&h=300&fit=crop' },
+  { id: '5', name: 'Chicken Chili', price: 450, desc: 'Spicy chicken with bell peppers and onions', image: 'https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=400&h=300&fit=crop' },
+  { id: '6', name: 'Chicken Wings', price: 380, desc: 'Crispy wings with buffalo sauce', image: 'https://images.unsplash.com/photo-1527477396000-e27163b481c2?w=400&h=300&fit=crop' },
+  
+  // MAIN COURSES
+  { id: '7', name: 'Chicken Biryani', price: 650, desc: 'Aromatic basmati rice with tender chicken', image: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=400&h=300&fit=crop' },
+  { id: '8', name: 'Mutton Biryani', price: 750, desc: 'Premium mutton with fragrant spices', image: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=400&h=300&fit=crop' },
+  { id: '9', name: 'Dal Bhat Set', price: 350, desc: 'Traditional Nepali meal with rice, lentils & curry', image: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400&h=300&fit=crop' },
+  { id: '10', name: 'Chicken Curry', price: 480, desc: 'Tender chicken in rich tomato gravy', image: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=400&h=300&fit=crop' },
+  { id: '11', name: 'Mutton Curry', price: 580, desc: 'Slow-cooked mutton in traditional spices', image: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400&h=300&fit=crop' },
+  { id: '12', name: 'Fish Curry', price: 520, desc: 'Fresh fish in coconut curry sauce', image: 'https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=400&h=300&fit=crop' },
+  
+  // PIZZA & ITALIAN
+  { id: '13', name: 'Margherita Pizza', price: 650, desc: 'Classic tomato, mozzarella and basil', image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400&h=300&fit=crop' },
+  { id: '14', name: 'Pepperoni Pizza', price: 750, desc: 'Spicy pepperoni with cheese', image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?w=400&h=300&fit=crop' },
+  { id: '15', name: 'Chicken BBQ Pizza', price: 850, desc: 'BBQ chicken with onions and peppers', image: 'https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?w=400&h=300&fit=crop' },
+  { id: '16', name: 'Chicken Alfredo Pasta', price: 580, desc: 'Creamy alfredo sauce with grilled chicken', image: 'https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=400&h=300&fit=crop' },
+  { id: '17', name: 'Spaghetti Bolognese', price: 520, desc: 'Classic meat sauce with parmesan', image: 'https://images.unsplash.com/photo-1598866594230-a7c12756260f?w=400&h=300&fit=crop' },
+  
+  // BURGERS & SANDWICHES
+  { id: '18', name: 'Classic Beef Burger', price: 450, desc: 'Juicy beef patty with lettuce and tomato', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=300&fit=crop' },
+  { id: '19', name: 'Chicken Burger', price: 420, desc: 'Grilled chicken breast with mayo', image: 'https://images.unsplash.com/photo-1606755962773-d324e0a13086?w=400&h=300&fit=crop' },
+  { id: '20', name: 'Cheese Burger', price: 480, desc: 'Double cheese with beef patty', image: 'https://images.unsplash.com/photo-1572802419224-296b0aeee0d9?w=400&h=300&fit=crop' },
+  { id: '21', name: 'Club Sandwich', price: 380, desc: 'Triple layer with chicken, bacon and veggies', image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=400&h=300&fit=crop' },
+  
+  // NOODLES & ASIAN
+  { id: '22', name: 'Chicken Chow Mein', price: 350, desc: 'Stir-fried noodles with chicken and vegetables', image: 'https://images.unsplash.com/photo-1612929633738-8fe44f7ec841?w=400&h=300&fit=crop' },
+  { id: '23', name: 'Veg Chow Mein', price: 300, desc: 'Mixed vegetables with soft noodles', image: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&h=300&fit=crop' },
+  { id: '24', name: 'Chicken Fried Rice', price: 320, desc: 'Wok-fried rice with chicken and egg', image: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400&h=300&fit=crop' },
+  { id: '25', name: 'Thukpa', price: 280, desc: 'Tibetan noodle soup with vegetables', image: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&h=300&fit=crop' },
+  
+  // DESSERTS
+  { id: '26', name: 'Chocolate Cake', price: 250, desc: 'Rich chocolate cake with cream frosting', image: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&h=300&fit=crop' },
+  { id: '27', name: 'Cheesecake', price: 280, desc: 'Creamy New York style cheesecake', image: 'https://images.unsplash.com/photo-1533134242443-d4fd215305ad?w=400&h=300&fit=crop' },
+  { id: '28', name: 'Ice Cream Sundae', price: 180, desc: 'Vanilla ice cream with chocolate sauce', image: 'https://images.unsplash.com/photo-1551024506-0bccd828d307?w=400&h=300&fit=crop' },
+  
+  // BEVERAGES
+  { id: '29', name: 'Coca Cola', price: 100, desc: 'Chilled 500ml', image: 'https://images.unsplash.com/photo-1554866585-cd94860890b7?w=400&h=300&fit=crop' },
+  { id: '30', name: 'Fresh Lime Soda', price: 120, desc: 'Refreshing lime with soda water', image: 'https://images.unsplash.com/photo-1544145945-f90425340c7e?w=400&h=300&fit=crop' },
+  { id: '31', name: 'Mango Lassi', price: 150, desc: 'Creamy yogurt drink with mango', image: 'https://images.unsplash.com/photo-1570197788417-0e82375c9371?w=400&h=300&fit=crop' },
+  { id: '32', name: 'Black Coffee', price: 80, desc: 'Freshly brewed black coffee', image: 'https://images.unsplash.com/photo-1497935586351-b67a49e012bf?w=400&h=300&fit=crop' },
+  { id: '33', name: 'Cappuccino', price: 180, desc: 'Espresso with steamed milk foam', image: 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=400&h=300&fit=crop' },
+  { id: '34', name: 'Green Tea', price: 60, desc: 'Organic green tea leaves', image: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&h=300&fit=crop' },
 ];
 
 export default function RestaurantMenuScreen() {

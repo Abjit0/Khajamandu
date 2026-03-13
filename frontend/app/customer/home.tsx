@@ -171,7 +171,11 @@ export default function HomeScreen() {
             <FoodCircleItem title="Coffee" imageUri="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=200&h=200&fit=crop" />
             <FoodCircleItem title="Tacos" imageUri="https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=200&h=200&fit=crop" />
             <FoodCircleItem title="Sandwich" imageUri="https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=200&h=200&fit=crop" />
-            <FoodCircleItem title="More" icon="grid" />
+            <FoodCircleItem title="Ramen" imageUri="https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=200&h=200&fit=crop" />
+            <FoodCircleItem title="Salad" imageUri="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=200&h=200&fit=crop" />
+            <FoodCircleItem title="Smoothie" imageUri="https://images.unsplash.com/photo-1553530666-ba11a7da3888?w=200&h=200&fit=crop" />
+            <FoodCircleItem title="Donuts" imageUri="https://images.unsplash.com/photo-1551024506-0bccd828d307?w=200&h=200&fit=crop" />
+            <FoodCircleItem title="Wraps" imageUri="https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=200&h=200&fit=crop" />
           </ScrollView>
         </View>
 
@@ -228,6 +232,15 @@ export default function HomeScreen() {
             location="Maharajgunj | Samakhushi"
             imageUri="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=600&h=400&fit=crop"
             price="Rs 655"
+            onPress={() => router.push({
+              pathname: '/restaurant/[id]',
+              params: { 
+                id: 'NPP Food Services',
+                image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=600&h=400&fit=crop',
+                location: 'Maharajgunj | Samakhushi',
+                rating: '4.2'
+              }
+            } as any)}
           />
            <VerticalRestaurantCard 
             name="The Bakery Cafe"
@@ -235,6 +248,143 @@ export default function HomeScreen() {
             location="Thamel, Kathmandu"
             imageUri="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600&h=400&fit=crop"
             price="Rs 800"
+            onPress={() => router.push({
+              pathname: '/restaurant/[id]',
+              params: { 
+                id: 'The Bakery Cafe',
+                image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600&h=400&fit=crop',
+                location: 'Thamel, Kathmandu',
+                rating: '4.6'
+              }
+            } as any)}
+          />
+          <VerticalRestaurantCard 
+            name="Himalayan Java Coffee"
+            tags="Coffee, Pastries"
+            location="Durbar Marg, Kathmandu"
+            imageUri="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=600&h=400&fit=crop"
+            price="Rs 450"
+            onPress={() => router.push({
+              pathname: '/restaurant/[id]',
+              params: { 
+                id: 'Himalayan Java Coffee',
+                image: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=600&h=400&fit=crop',
+                location: 'Durbar Marg, Kathmandu',
+                rating: '4.4'
+              }
+            } as any)}
+          />
+          <VerticalRestaurantCard 
+            name="Fire and Ice Pizzeria"
+            tags="Italian, Pizza"
+            location="Thamel, Kathmandu"
+            imageUri="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&h=400&fit=crop"
+            price="Rs 1200"
+            onPress={() => router.push({
+              pathname: '/restaurant/[id]',
+              params: { 
+                id: 'Fire and Ice Pizzeria',
+                image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&h=400&fit=crop',
+                location: 'Thamel, Kathmandu',
+                rating: '4.7'
+              }
+            } as any)}
+          />
+          <VerticalRestaurantCard 
+            name="Dhokaima Cafe"
+            tags="Nepali, Traditional"
+            location="Patan Dhoka, Lalitpur"
+            imageUri="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&h=400&fit=crop"
+            price="Rs 750"
+            onPress={() => router.push({
+              pathname: '/restaurant/[id]',
+              params: { 
+                id: 'Dhokaima Cafe',
+                image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&h=400&fit=crop',
+                location: 'Patan Dhoka, Lalitpur',
+                rating: '4.5'
+              }
+            } as any)}
+          />
+          <VerticalRestaurantCard 
+            name="Roadhouse Cafe"
+            tags="Continental, Bar"
+            location="Thamel, Kathmandu"
+            imageUri="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&h=400&fit=crop"
+            price="Rs 950"
+            onPress={() => router.push({
+              pathname: '/restaurant/[id]',
+              params: { 
+                id: 'Roadhouse Cafe',
+                image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&h=400&fit=crop',
+                location: 'Thamel, Kathmandu',
+                rating: '4.3'
+              }
+            } as any)}
+          />
+          <VerticalRestaurantCard 
+            name="Bhojan Griha"
+            tags="Nepali, Cultural"
+            location="Dillibazar, Kathmandu"
+            imageUri="https://images.unsplash.com/photo-1574484284002-952d92456975?w=600&h=400&fit=crop"
+            price="Rs 1800"
+            onPress={() => router.push({
+              pathname: '/restaurant/[id]',
+              params: { 
+                id: 'Bhojan Griha',
+                image: 'https://images.unsplash.com/photo-1574484284002-952d92456975?w=600&h=400&fit=crop',
+                location: 'Dillibazar, Kathmandu',
+                rating: '4.8'
+              }
+            } as any)}
+          />
+          <VerticalRestaurantCard 
+            name="Garden of Dreams Cafe"
+            tags="Cafe, Garden Dining"
+            location="Thamel, Kathmandu"
+            imageUri="https://images.unsplash.com/photo-1559329007-40df8a9345d8?w=600&h=400&fit=crop"
+            price="Rs 650"
+            onPress={() => router.push({
+              pathname: '/restaurant/[id]',
+              params: { 
+                id: 'Garden of Dreams Cafe',
+                image: 'https://images.unsplash.com/photo-1559329007-40df8a9345d8?w=600&h=400&fit=crop',
+                location: 'Thamel, Kathmandu',
+                rating: '4.4'
+              }
+            } as any)}
+          />
+          <VerticalRestaurantCard 
+            name="Momo Station"
+            tags="Momo, Tibetan"
+            location="New Baneshwor, Kathmandu"
+            imageUri="https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=600&h=400&fit=crop"
+            price="Rs 350"
+            onPress={() => router.push({
+              pathname: '/restaurant/[id]',
+              params: { 
+                id: 'Momo Station',
+                image: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=600&h=400&fit=crop',
+                location: 'New Baneshwor, Kathmandu',
+                rating: '4.1'
+              }
+            } as any)}
+          />
+          <VerticalRestaurantCard 
+            name="Bluebird Mall Food Court"
+            tags="Multi-cuisine, Fast Food"
+            location="Tripureshwor, Kathmandu"
+            imageUri="https://images.unsplash.com/photo-1567521464027-f127ff144326?w=600&h=400&fit=crop"
+            price="Rs 500"
+            onPress={() => router.push({
+              pathname: '/restaurant/[id]',
+              params: { 
+                id: 'Bluebird Mall Food Court',
+                image: 'https://images.unsplash.com/photo-1567521464027-f127ff144326?w=600&h=400&fit=crop',
+                location: 'Tripureshwor, Kathmandu',
+                rating: '3.9'
+              }
+            } as any)}
           />
         </View>
 
@@ -306,9 +456,10 @@ interface VerticalRestaurantCardProps {
   location: string;
   imageUri: string;
   price: string;
+  onPress?: () => void;
 }
-const VerticalRestaurantCard = ({ name, tags, location, imageUri, price }: VerticalRestaurantCardProps) => (
-    <View style={styles.verticalCard}>
+const VerticalRestaurantCard = ({ name, tags, location, imageUri, price, onPress }: VerticalRestaurantCardProps) => (
+    <TouchableOpacity style={styles.verticalCard} onPress={onPress}>
         <Image source={{ uri: imageUri }} style={styles.verticalImage} />
         <View style={styles.priceTag}>
             <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 12 }}>{price}</Text>
@@ -318,7 +469,7 @@ const VerticalRestaurantCard = ({ name, tags, location, imageUri, price }: Verti
             <Text style={{ color: COLORS.textGray, fontSize: 12, marginVertical: 2 }}>{tags}</Text>
             <Text style={{ color: COLORS.textGray, fontSize: 11 }}>{location}</Text>
         </View>
-    </View>
+    </TouchableOpacity>
 );
 
 // --- STYLES ---
