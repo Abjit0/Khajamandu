@@ -45,10 +45,18 @@ const DATA: Record<string, CategoryData> = {
       { name: 'Burger House', location: 'New Baneshwor', rating: '4.8', time: '35 mins', offer: '15% OFF', logo: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=200&h=200&fit=crop' },
       { name: 'Himalayan Java', location: 'Civil Mall', rating: '4.6', time: '20 mins', offer: '', logo: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=200&h=200&fit=crop' },
       { name: 'Fire And Ice Pizzeria', location: 'Thamel', rating: '4.7', time: '45 mins', offer: 'Free Delivery', logo: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&h=200&fit=crop' },
-      { name: 'Roadhouse Cafe', location: 'Boudha', rating: '4.4', time: '50 mins', offer: '', logo: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&h=200&fit=crop' },
+      { name: 'Roadhouse Cafe', location: 'Boudha', rating: '4.4', time: '50 mins', offer: '', logo: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=200&h=200&fit=crop' },
       { name: 'Dalle Momo', location: 'Kamaladi', rating: '4.3', time: '30 mins', offer: 'Spicy Deal', logo: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=200&h=200&fit=crop' },
       { name: 'KFC Nepal', location: 'Durbar Marg', rating: '4.1', time: '25 mins', offer: 'Meal Box', logo: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=200&h=200&fit=crop' },
       { name: 'Bota Simply Momo', location: 'Kumaripati', rating: '4.0', time: '35 mins', offer: '', logo: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=200&h=200&fit=crop' },
+      { name: 'Dhokaima Cafe', location: 'Patan Dhoka', rating: '4.5', time: '40 mins', offer: 'Traditional', logo: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=200&h=200&fit=crop' },
+      { name: 'Garden of Dreams Cafe', location: 'Thamel', rating: '4.4', time: '30 mins', offer: '', logo: 'https://images.unsplash.com/photo-1559329007-40df8a9345d8?w=200&h=200&fit=crop' },
+      { name: 'Bhojan Griha', location: 'Dillibazar', rating: '4.8', time: '60 mins', offer: 'Cultural Dining', logo: 'https://images.unsplash.com/photo-1574484284002-952d92456975?w=200&h=200&fit=crop' },
+      { name: 'Momo Station', location: 'New Baneshwor', rating: '4.1', time: '20 mins', offer: '', logo: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=200&h=200&fit=crop' },
+      { name: 'Bluebird Mall Food Court', location: 'Tripureshwor', rating: '3.9', time: '25 mins', offer: 'Multi-cuisine', logo: 'https://images.unsplash.com/photo-1567521464027-f127ff144326?w=200&h=200&fit=crop' },
+      { name: 'The Bakery Cafe', location: 'Thamel', rating: '4.6', time: '30 mins', offer: '', logo: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=200&h=200&fit=crop' },
+      { name: 'Nanglo Restaurant', location: 'Durbar Marg', rating: '4.3', time: '35 mins', offer: '', logo: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=200&h=200&fit=crop' },
+      { name: 'Chopstix', location: 'Lazimpat', rating: '4.2', time: '30 mins', offer: 'Chinese', logo: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=200&h=200&fit=crop' },
     ]
   },
   'offers': {
@@ -62,6 +70,12 @@ const DATA: Record<string, CategoryData> = {
       { name: 'Valley Cold Store', location: 'Balaju', rating: '4.2', time: '15 mins', offer: '10% Cashback', logo: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=200&h=200&fit=crop' },
       { name: 'Sandwich Point', location: 'Thamel', rating: '4.3', time: '25 mins', offer: 'BOGO Deal', logo: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=200&h=200&fit=crop' },
       { name: 'Biryani Adda', location: 'Putalisadak', rating: '4.4', time: '35 mins', offer: 'Family Pack', logo: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=200&h=200&fit=crop' },
+      { name: 'Himalayan Java', location: 'Durbar Marg', rating: '4.6', time: '20 mins', offer: '20% OFF Coffee', logo: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=200&h=200&fit=crop' },
+      { name: 'The Bakery Cafe', location: 'Thamel', rating: '4.6', time: '30 mins', offer: 'Free Pastry', logo: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=200&h=200&fit=crop' },
+      { name: 'Momo Magic', location: 'Basantapur', rating: '4.3', time: '25 mins', offer: 'Platter @ 499', logo: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=200&h=200&fit=crop' },
+      { name: 'Noodle House', location: 'Jhamsikhel', rating: '4.1', time: '30 mins', offer: 'Buy 2 Get 1', logo: 'https://images.unsplash.com/photo-1612929633738-8fe44f7ec841?w=200&h=200&fit=crop' },
+      { name: 'Chopstix', location: 'Lazimpat', rating: '4.2', time: '30 mins', offer: '15% OFF', logo: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=200&h=200&fit=crop' },
+      { name: 'Fire And Ice', location: 'Thamel', rating: '4.7', time: '45 mins', offer: 'Free Delivery', logo: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&h=200&fit=crop' },
     ]
   },
   'taste-beyond': {
@@ -75,6 +89,11 @@ const DATA: Record<string, CategoryData> = {
       { name: 'Fire And Ice', location: 'Thamel', rating: '4.8', time: 'Since 1995', offer: 'Italian', logo: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&h=200&fit=crop' },
       { name: 'Chez Caroline', location: 'Baber Mahal', rating: '4.9', time: 'French Cuisine', offer: '', logo: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=200&h=200&fit=crop' },
       { name: 'Old House', location: 'Durbar Marg', rating: '4.7', time: 'Heritage', offer: '', logo: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=200&h=200&fit=crop' },
+      { name: 'Bhojan Griha', location: 'Dillibazar', rating: '4.8', time: 'Since 1998', offer: 'Cultural Show', logo: 'https://images.unsplash.com/photo-1574484284002-952d92456975?w=200&h=200&fit=crop' },
+      { name: 'Krishnarpan', location: 'Dwarika Hotel', rating: '4.9', time: 'Fine Dining', offer: 'Authentic', logo: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=200&h=200&fit=crop' },
+      { name: 'Dhokaima Cafe', location: 'Patan Dhoka', rating: '4.5', time: 'Since 2005', offer: 'Traditional', logo: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=200&h=200&fit=crop' },
+      { name: 'Roadhouse Cafe', location: 'Thamel', rating: '4.4', time: 'Since 2000', offer: 'Continental', logo: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=200&h=200&fit=crop' },
+      { name: 'Nanglo Restaurant', location: 'Durbar Marg', rating: '4.3', time: 'Since 1997', offer: 'Nepali', logo: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=200&h=200&fit=crop' },
     ]
   },
   'hot-deals': {
@@ -87,6 +106,12 @@ const DATA: Record<string, CategoryData> = {
       { name: 'Momo Magic', location: 'Basantapur', rating: '4.3', time: '25 mins', offer: 'Platter Deal', logo: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=200&h=200&fit=crop' },
       { name: 'Noodle Box', location: 'Jhamsikhel', rating: '4.0', time: '30 mins', offer: 'Buy 2 Get 1', logo: 'https://images.unsplash.com/photo-1612929633738-8fe44f7ec841?w=200&h=200&fit=crop' },
       { name: 'Taco Bell', location: 'Thamel', rating: '4.4', time: '20 mins', offer: 'Taco Tuesday', logo: 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=200&h=200&fit=crop' },
+      { name: 'Burger House', location: 'New Baneshwor', rating: '4.8', time: '25 mins', offer: '50% OFF', logo: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=200&h=200&fit=crop' },
+      { name: 'Biryani Adda', location: 'Putalisadak', rating: '4.4', time: '35 mins', offer: 'Family Pack @ 1999', logo: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=200&h=200&fit=crop' },
+      { name: 'Sandwich Point', location: 'Thamel', rating: '4.3', time: '25 mins', offer: 'BOGO', logo: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=200&h=200&fit=crop' },
+      { name: 'Valley Cold Store', location: 'Balaju', rating: '4.2', time: '15 mins', offer: '10% Cashback', logo: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=200&h=200&fit=crop' },
+      { name: 'The Bakery Cafe', location: 'Thamel', rating: '4.6', time: '30 mins', offer: 'Free Pastry', logo: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=200&h=200&fit=crop' },
+      { name: 'Dalle Momo', location: 'Kamaladi', rating: '4.3', time: '30 mins', offer: 'Spicy Deal @ 399', logo: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=200&h=200&fit=crop' },
     ]
   },
   'pizza': {

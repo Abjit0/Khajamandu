@@ -9,7 +9,7 @@ const getApiUrl = () => {
     }
     
     // For mobile - Use current Wi-Fi IP
-    return 'http://192.168.101.8:5000/api';
+    return 'http://192.168.101.7:5000/api';
 };
 
 const API_URL = getApiUrl();
