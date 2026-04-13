@@ -48,6 +48,16 @@ const orderSchema = new mongoose.Schema({
     paidAmount: { type: Number, default: 0 },
     paidAt: { type: Date }
   },
+  // Pre-order / Scheduled order fields
+  isPreOrder: { type: Boolean, default: false },
+  scheduledTime: { type: Date, default: null },
+  preOrderStatus: {
+    type: String,
+    enum: ['PENDING', 'CONFIRMED', 'PREPARING_SOON', 'READY'],
+    default: 'PENDING'
+  },
+  preOrderReminderSent: { type: Boolean, default: false },
+
   // Timestamps
   createdAt: { type: Date, default: Date.now },
   confirmedAt: { type: Date },
@@ -60,6 +70,7 @@ orderSchema.index({ userEmail: 1, createdAt: -1 });
 orderSchema.index({ userId: 1, createdAt: -1 });
 orderSchema.index({ orderStatus: 1 });
 orderSchema.index({ restaurantId: 1, orderStatus: 1 });
+orderSchema.index({ isPreOrder: 1, scheduledTime: 1 });
 
 // Method to update order status with timestamp
 orderSchema.methods.updateStatus = function(newStatus) {

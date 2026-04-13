@@ -9,6 +9,7 @@ const AdminDashboard = () => {
   const [pendingUsers, setPendingUsers] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
   const [recentOrders, setRecentOrders] = useState([]);
+  const [preOrders, setPreOrders] = useState([]);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useState(localStorage.getItem('adminToken'));
@@ -68,9 +69,11 @@ const AdminDashboard = () => {
       if (activeTab === 'dashboard') {
         const statsRes = await axios.get(`${API_URL}/admin/stats`, { headers });
         setStats(statsRes.data.data);
-
         const ordersRes = await axios.get(`${API_URL}/admin/orders?limit=5`, { headers });
         setRecentOrders(ordersRes.data.data);
+      } else if (activeTab === 'preorders') {
+        const preRes = await axios.get(`${API_URL}/orders/preorders/list`, { headers });
+        setPreOrders(preRes.data.data || []);
       } else if (activeTab === 'pending') {
         const pendingRes = await axios.get(`${API_URL}/admin/pending`, { headers });
         setPendingUsers(pendingRes.data.data);
@@ -157,17 +160,15 @@ const AdminDashboard = () => {
           >
             📊 Dashboard
           </button>
-          <button
-            className={activeTab === 'pending' ? 'active' : ''}
-            onClick={() => setActiveTab('pending')}
-          >
+          <button className={activeTab === 'pending' ? 'active' : ''} onClick={() => setActiveTab('pending')}>
             ⏳ Pending Approvals
             {pendingUsers.length > 0 && <span className="badge">{pendingUsers.length}</span>}
           </button>
-          <button
-            className={activeTab === 'users' ? 'active' : ''}
-            onClick={() => setActiveTab('users')}
-          >
+          <button className={activeTab === 'preorders' ? 'active' : ''} onClick={() => setActiveTab('preorders')}>
+            📅 Pre-Orders
+            {preOrders.length > 0 && <span className="badge">{preOrders.length}</span>}
+          </button>
+          <button className={activeTab === 'users' ? 'active' : ''} onClick={() => setActiveTab('users')}>
             👥 All Users
           </button>
           <button onClick={handleLogout} className="logout-btn">
@@ -240,6 +241,47 @@ const AdminDashboard = () => {
                 ))}
               </tbody>
             </table>
+          </div>
+        )}
+
+        {activeTab === 'preorders' && (
+          <div>
+            <h1>Pre-Orders ({preOrders.length})</h1>
+            {preOrders.length === 0 ? (
+              <p className="empty-state">No upcoming pre-orders</p>
+            ) : (
+              <table className="data-table">
+                <thead>
+                  <tr>
+                    <th>Order ID</th>
+                    <th>Customer</th>
+                    <th>Restaurant</th>
+                    <th>Scheduled Time</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {preOrders.map(order => (
+                    <tr key={order._id}>
+                      <td>#{order._id.slice(-6)}</td>
+                      <td>{order.customerName || 'Guest'}</td>
+                      <td>{order.restaurantName || order.restaurantId}</td>
+                      <td>{new Date(order.scheduledTime).toLocaleString([], {
+                        weekday: 'short', month: 'short', day: 'numeric',
+                        hour: '2-digit', minute: '2-digit'
+                      })}</td>
+                      <td>Rs {order.totalAmount}</td>
+                      <td>
+                        <span className={`status ${order.orderStatus.toLowerCase()}`}>
+                          {order.orderStatus}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
           </div>
         )}
 

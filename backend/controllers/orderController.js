@@ -430,3 +430,67 @@ exports.createTestOrder = async (req, res) => {
     });
   }
 };
+
+// 9. Get Pre-Orders (For restaurant - upcoming scheduled orders)
+exports.getPreOrders = async (req, res) => {
+  try {
+    const { restaurantId } = req.query;
+    const now = new Date();
+
+    let filter = { isPreOrder: true, scheduledTime: { $gte: now } };
+    if (restaurantId) filter.restaurantId = restaurantId;
+
+    const preOrders = await Order.find(filter).sort({ scheduledTime: 1 });
+
+    res.status(200).json({
+      status: 'SUCCESS',
+      results: preOrders.length,
+      data: preOrders
+    });
+  } catch (error) {
+    console.error('❌ Get Pre-Orders Error:', error);
+    res.status(500).json({ status: 'FAILED', message: 'Failed to fetch pre-orders' });
+  }
+};
+
+// 10. Auto-notify restaurant for upcoming pre-orders (called by a scheduler or cron)
+exports.checkUpcomingPreOrders = async (req, res) => {
+  try {
+    const now = new Date();
+    const in30Min = new Date(now.getTime() + 30 * 60 * 1000);
+
+    // Find pre-orders scheduled within the next 30 minutes that haven't been reminded
+    const upcoming = await Order.find({
+      isPreOrder: true,
+      scheduledTime: { $gte: now, $lte: in30Min },
+      preOrderReminderSent: false,
+      orderStatus: { $nin: ['CANCELLED', 'DELIVERED'] }
+    });
+
+    for (const order of upcoming) {
+      try {
+        await createNotification(
+          order.userId,
+          order.userEmail,
+          '⏰ Pre-Order Reminder',
+          `Your pre-order from ${order.restaurantName} is scheduled in 30 minutes. Food is being prepared!`,
+          'pre_order_reminder',
+          order._id.toString()
+        );
+        order.preOrderReminderSent = true;
+        order.preOrderStatus = 'PREPARING_SOON';
+        await order.save();
+      } catch (e) {
+        console.log('Notification error:', e.message);
+      }
+    }
+
+    res.status(200).json({
+      status: 'SUCCESS',
+      message: `Processed ${upcoming.length} upcoming pre-orders`
+    });
+  } catch (error) {
+    console.error('❌ Check Pre-Orders Error:', error);
+    res.status(500).json({ status: 'FAILED', message: 'Failed to check pre-orders' });
+  }
+};
