@@ -48,15 +48,9 @@ const orderSchema = new mongoose.Schema({
     paidAmount: { type: Number, default: 0 },
     paidAt: { type: Date }
   },
-  // Pre-order / Scheduled order fields
+  // Pre-order fields
   isPreOrder: { type: Boolean, default: false },
   scheduledTime: { type: Date, default: null },
-  preOrderStatus: {
-    type: String,
-    enum: ['PENDING', 'CONFIRMED', 'PREPARING_SOON', 'READY'],
-    default: 'PENDING'
-  },
-  preOrderReminderSent: { type: Boolean, default: false },
 
   // Timestamps
   createdAt: { type: Date, default: Date.now },

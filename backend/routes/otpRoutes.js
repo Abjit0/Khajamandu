@@ -6,7 +6,7 @@ const { signup, sendOTP, verifyOTP, resetPassword, loginUser } = require('../con
 const { 
   createOrder, getAllOrders, updateOrderStatus, getUserOrders, 
   getOrderById, updatePaymentStatus, getTransactionHistory, 
-  createTestOrder, getPreOrders, checkUpcomingPreOrders 
+  createTestOrder, getPreOrders
 } = require('../controllers/orderController');
 const { authenticateToken } = require('../middleware/auth');
 
@@ -29,6 +29,5 @@ router.post('/orders/test', authenticateToken, createTestOrder);
 
 // Pre-order Routes
 router.get('/orders/preorders/list', getPreOrders);
-router.get('/orders/preorders/check-upcoming', checkUpcomingPreOrders);
 
 module.exports = router;
