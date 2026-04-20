@@ -54,6 +54,9 @@ app.get('/api/transactions/:userId', authenticateToken, orderController.getTrans
 // Test route for creating orders with logged-in user
 app.post('/api/orders/create-test', authenticateToken, orderController.createTestOrder);
 
+// Pre-order routes
+app.get('/api/orders/preorders/list', orderController.getPreOrders);
+
 // 4. Notification Routes
 app.get('/api/notifications/:userId', authenticateToken, notificationController.getUserNotifications);
 app.patch('/api/notifications/:notificationId/read', authenticateToken, notificationController.markAsRead);

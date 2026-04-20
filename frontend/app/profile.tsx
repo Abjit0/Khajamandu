@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert, ActivityIndicator 
+  View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert, ActivityIndicator, Modal, TextInput
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -27,6 +27,9 @@ export default function ProfileScreen() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('profile');
   const [transactions, setTransactions] = useState<any[]>([]);
+  const [editName, setEditName] = useState('');
+  const [editPhone, setEditPhone] = useState('');
+  const [showEditModal, setShowEditModal] = useState(false);
 
   useEffect(() => {
     loadUserData();
@@ -106,6 +109,38 @@ export default function ProfileScreen() {
     );
   };
 
+  const handleEditProfile = () => {
+    setEditName(userData?.profile?.name || '');
+    setEditPhone(userData?.profile?.phone || '');
+    setShowEditModal(true);
+  };
+
+  const handleSaveProfile = async () => {
+    if (!editName.trim()) {
+      Alert.alert('Error', 'Name cannot be empty');
+      return;
+    }
+    try {
+      const response = await client.post('/user/update-profile', {
+        userId: userData?.id,
+        name: editName.trim(),
+        phone: editPhone.trim(),
+      });
+      if (response.data.status === 'SUCCESS') {
+        const updated = { ...userData, profile: { ...userData.profile, name: editName.trim(), phone: editPhone.trim() } };
+        setUserData(updated);
+        await authAPI.storeAuthData(
+          (await authAPI.getAuthData()).token,
+          updated
+        );
+        setShowEditModal(false);
+        Alert.alert('Success', 'Profile updated!');
+      }
+    } catch (e) {
+      Alert.alert('Error', 'Failed to update profile');
+    }
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'PLACED': return COLORS.warning;
@@ -183,7 +218,7 @@ export default function ProfileScreen() {
 
       {/* Menu Options */}
       <View style={styles.menuSection}>
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={handleEditProfile}>
           <Ionicons name="person-outline" size={24} color={COLORS.primary} />
           <Text style={styles.menuText}>Edit Profile</Text>
           <Ionicons name="chevron-forward" size={20} color={COLORS.gray} />
@@ -406,6 +441,36 @@ export default function ProfileScreen() {
        renderTransactionsTab()}
       
       {userData?.role === 'restaurant' ? <RestaurantBottomNavBar /> : <BottomNavBar />}
+
+      {/* Edit Profile Modal */}
+      <Modal visible={showEditModal} transparent animationType="slide">
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalBox}>
+            <Text style={styles.modalTitle}>Edit Profile</Text>
+            <TextInput
+              style={styles.modalInput}
+              placeholder="Full Name"
+              value={editName}
+              onChangeText={setEditName}
+            />
+            <TextInput
+              style={styles.modalInput}
+              placeholder="Phone Number"
+              value={editPhone}
+              onChangeText={setEditPhone}
+              keyboardType="phone-pad"
+            />
+            <View style={styles.modalActions}>
+              <TouchableOpacity style={[styles.modalBtn, { backgroundColor: COLORS.gray }]} onPress={() => setShowEditModal(false)}>
+                <Text style={styles.modalBtnText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.modalBtn, { backgroundColor: COLORS.primary }]} onPress={handleSaveProfile}>
+                <Text style={styles.modalBtnText}>Save</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -626,5 +691,16 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.bg,
     borderRadius: 8
   },
-  viewOrderText: { fontSize: 14, color: COLORS.primary, fontWeight: 'bold', marginRight: 4 }
+  viewOrderText: { fontSize: 14, color: COLORS.primary, fontWeight: 'bold', marginRight: 4 },
+
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center' },
+  modalBox: { backgroundColor: COLORS.white, borderRadius: 16, padding: 24, width: '85%' },
+  modalTitle: { fontSize: 18, fontWeight: 'bold', color: COLORS.dark, marginBottom: 16 },
+  modalInput: {
+    backgroundColor: COLORS.bg, borderRadius: 10, padding: 14,
+    fontSize: 15, marginBottom: 12, borderWidth: 1, borderColor: '#E0E0E0'
+  },
+  modalActions: { flexDirection: 'row', gap: 10, marginTop: 8 },
+  modalBtn: { flex: 1, padding: 14, borderRadius: 10, alignItems: 'center' },
+  modalBtnText: { color: COLORS.white, fontWeight: 'bold', fontSize: 15 },
 });

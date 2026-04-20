@@ -282,13 +282,15 @@ export default function RiderDashboard() {
     );
   };
 
-  const updateDeliveryStatus = async (status: string) => {
+  const updateDeliveryStatus = async (status: string, isCODPayment: boolean = false) => {
     if (!activeDelivery || !activeDelivery.orderId) return;
+
+    const orderId = activeDelivery.orderId._id || activeDelivery.orderId;
 
     try {
       const response = await client.post('/rider/update-delivery-status', {
         riderId: riderData.id,
-        orderId: activeDelivery.orderId._id || activeDelivery.orderId,
+        orderId: orderId,
         status: status
       });
 
@@ -297,7 +299,26 @@ export default function RiderDashboard() {
         if (status === 'picked_up') message = 'Order picked up!';
         else if (status === 'on_the_way') message = 'On the way to customer!';
         else if (status === 'delivered') message = '🎉 Delivery completed!';
-        
+
+        // If COD and delivered — mark payment as PAID
+        if (status === 'delivered' && isCODPayment) {
+          try {
+            await client.post('/orders/payment-status', {
+              orderId: orderId,
+              paymentStatus: 'PAID',
+              paymentDetails: {
+                provider: 'COD',
+                transactionRef: `COD-${orderId.slice(-6)}`,
+                paidAmount: activeDelivery.orderId?.totalAmount || 0,
+                paidAt: new Date().toISOString()
+              }
+            });
+            message = '🎉 Delivery completed! Cash collected & payment marked as PAID.';
+          } catch (payErr) {
+            console.log('Payment status update error:', payErr);
+          }
+        }
+
         Alert.alert('Success', message);
         fetchRiderData();
       }
@@ -691,7 +712,7 @@ export default function RiderDashboard() {
                 { text: 'No', style: 'cancel' },
                 {
                   text: 'Yes, Delivered',
-                  onPress: () => updateDeliveryStatus('delivered')
+                  onPress: () => updateDeliveryStatus('delivered', true)
                 }
               ]
             );

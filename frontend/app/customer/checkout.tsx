@@ -24,6 +24,7 @@ export default function CheckoutScreen() {
   const [loading, setLoading] = useState(false);
   const [userAuthenticated, setUserAuthenticated] = useState(false);
   const [specialInstructions, setSpecialInstructions] = useState('');
+  const [deliveryAddress, setDeliveryAddress] = useState('');
 
   // Pre-order state
   const isPreOrder = params.isPreOrder === 'true';
@@ -74,6 +75,11 @@ export default function CheckoutScreen() {
       return;
     }
 
+    if (!deliveryAddress.trim()) {
+      Alert.alert('Address Required', 'Please enter your delivery address.');
+      return;
+    }
+
     const authData = await authAPI.getAuthData();
     let currentUser = null;
     if (authData.userData) {
@@ -92,12 +98,13 @@ export default function CheckoutScreen() {
     }));
 
     const restaurantInfo = cartItems[0]?.restaurant || 'Unknown Restaurant';
-    
+    const restaurantId = cartItems[0]?.restaurantId || restaurantInfo;
+
     const orderData: any = {
       items: processedItems,
       totalAmount: Number(total),
-      deliveryAddress: "Kathmandu, Nepal",
-      restaurantId: restaurantInfo,
+      deliveryAddress: deliveryAddress.trim(),
+      restaurantId: restaurantId,
       restaurantName: restaurantInfo,
       paymentMethod: paymentMethod,
       specialInstructions: specialInstructions.trim() || '',
@@ -205,10 +212,14 @@ export default function CheckoutScreen() {
         {/* Delivery Address */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Delivery Address</Text>
-          <View style={styles.addressCard}>
-            <Ionicons name="location" size={24} color={COLORS.primary} style={{ marginRight: 10 }} />
-            <Text style={{ flex: 1, fontWeight: 'bold' }}>Kathmandu, Nepal</Text>
-          </View>
+          <TextInput
+            style={styles.addressInput}
+            placeholder="Enter your delivery address"
+            value={deliveryAddress}
+            onChangeText={setDeliveryAddress}
+            multiline
+            numberOfLines={2}
+          />
         </View>
 
         {/* Payment Method */}
@@ -329,13 +340,16 @@ const styles = StyleSheet.create({
   itemDetails: { flex: 2, fontSize: 12, color: COLORS.gray },
   itemTotal: { flex: 1, textAlign: 'right', fontWeight: 'bold', color: COLORS.primary },
   
-  addressCard: { 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    backgroundColor: COLORS.white, 
-    padding: 15, 
+  addressInput: {
+    backgroundColor: COLORS.white,
+    padding: 14,
     borderRadius: 12,
-    elevation: 1
+    fontSize: 15,
+    color: COLORS.dark,
+    borderWidth: 1,
+    borderColor: COLORS.gray + '40',
+    textAlignVertical: 'top',
+    elevation: 1,
   },
   
   paymentOption: { 

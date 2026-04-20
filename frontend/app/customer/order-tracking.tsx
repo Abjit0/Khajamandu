@@ -125,25 +125,64 @@ export default function OrderTrackingScreen() {
     ];
 
     const currentStatusIndex = statuses.findIndex(s => s.key === order?.orderStatus);
+    const isCancelled = order?.orderStatus === 'CANCELLED';
 
     return (
       <View style={styles.timeline}>
         {statuses.map((status, index) => {
           const isCompleted = index <= currentStatusIndex;
           const isCurrent = index === currentStatusIndex;
-          
+          const isDelivered = order?.orderStatus === 'DELIVERED' && status.key === 'DELIVERED';
+
+          // For cancelled orders — only show PLACED as done, rest as cancelled
+          if (isCancelled) {
+            const isPlaced = status.key === 'PLACED';
+            return (
+              <View key={status.key} style={styles.timelineItem}>
+                <View style={styles.timelineLeft}>
+                  <View style={[
+                    styles.timelineIcon,
+                    isPlaced ? styles.completedIcon : styles.cancelledIcon
+                  ]}>
+                    <Ionicons
+                      name={isPlaced ? 'checkmark' : 'close'}
+                      size={16}
+                      color={COLORS.white}
+                    />
+                  </View>
+                  {index < statuses.length - 1 && (
+                    <View style={[styles.timelineLine, styles.pendingLine]} />
+                  )}
+                </View>
+                <View style={styles.timelineContent}>
+                  <Text style={[styles.timelineLabel, isPlaced && styles.completedLabel]}>
+                    {status.label}
+                  </Text>
+                  {isPlaced && status.time && (
+                    <Text style={styles.timelineTime}>
+                      {new Date(status.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </Text>
+                  )}
+                  {!isPlaced && (
+                    <Text style={styles.cancelledStatus}>Cancelled</Text>
+                  )}
+                </View>
+              </View>
+            );
+          }
+
           return (
             <View key={status.key} style={styles.timelineItem}>
               <View style={styles.timelineLeft}>
                 <View style={[
                   styles.timelineIcon,
                   isCompleted ? styles.completedIcon : styles.pendingIcon,
-                  isCurrent && styles.currentIcon
+                  isCurrent && !isDelivered && styles.currentIcon
                 ]}>
-                  <Ionicons 
-                    name={isCompleted ? 'checkmark' : 'time-outline'} 
-                    size={16} 
-                    color={isCompleted ? COLORS.white : COLORS.gray} 
+                  <Ionicons
+                    name={isCompleted ? 'checkmark' : 'time-outline'}
+                    size={16}
+                    color={isCompleted ? COLORS.white : COLORS.gray}
                   />
                 </View>
                 {index < statuses.length - 1 && (
@@ -153,22 +192,31 @@ export default function OrderTrackingScreen() {
                   ]} />
                 )}
               </View>
-              
+
               <View style={styles.timelineContent}>
                 <Text style={[
                   styles.timelineLabel,
                   isCompleted && styles.completedLabel,
-                  isCurrent && styles.currentLabel
+                  isCurrent && !isDelivered && styles.currentLabel
                 ]}>
                   {status.label}
                 </Text>
+
+                {/* Show timestamp if available */}
                 {status.time && (
                   <Text style={styles.timelineTime}>
                     {new Date(status.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </Text>
                 )}
-                {isCurrent && !status.time && (
+
+                {/* Show "In Progress" only for non-delivered current steps */}
+                {isCurrent && !isDelivered && !status.time && (
                   <Text style={styles.currentStatus}>In Progress...</Text>
+                )}
+
+                {/* Show delivered confirmation */}
+                {isDelivered && (
+                  <Text style={styles.deliveredStatus}>✓ Order Delivered</Text>
                 )}
               </View>
             </View>
@@ -439,6 +487,7 @@ const styles = StyleSheet.create({
   completedIcon: { backgroundColor: COLORS.success },
   currentIcon: { backgroundColor: COLORS.primary },
   pendingIcon: { backgroundColor: COLORS.gray },
+  cancelledIcon: { backgroundColor: COLORS.error },
   timelineLine: {
     width: 2,
     height: 30,
@@ -452,6 +501,8 @@ const styles = StyleSheet.create({
   currentLabel: { color: COLORS.primary, fontWeight: 'bold' },
   timelineTime: { fontSize: 12, color: COLORS.gray, marginTop: 2 },
   currentStatus: { fontSize: 12, color: COLORS.primary, marginTop: 2, fontStyle: 'italic' },
+  deliveredStatus: { fontSize: 12, color: COLORS.success, marginTop: 2, fontWeight: 'bold' },
+  cancelledStatus: { fontSize: 12, color: COLORS.error, marginTop: 2, fontStyle: 'italic' },
   
   actionButtons: {
     flexDirection: 'row',

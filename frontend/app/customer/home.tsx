@@ -40,6 +40,7 @@ export default function HomeScreen() {
   const [newAddressLabel, setNewAddressLabel] = useState('');
   const [newAddressText, setNewAddressText] = useState('');
   const [selectedAddressType, setSelectedAddressType] = useState<'home' | 'briefcase' | 'location'>('home');
+  const [searchQuery, setSearchQuery] = useState('');
   const [savedAddresses, setSavedAddresses] = useState([
     { id: '1', label: 'Home', address: 'Thamel, Kathmandu', icon: 'home' },
     { id: '2', label: 'Work', address: 'Durbar Marg, Kathmandu', icon: 'briefcase' },
@@ -237,6 +238,28 @@ export default function HomeScreen() {
     }
   };
 
+  // --- ALL RESTAURANTS DATA (for search) ---
+  const ALL_RESTAURANTS = [
+    { id: 'NPP Food Services', name: 'NPP Food Services', tags: 'Fast Food', location: 'Maharajgunj | Samakhushi', image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=600&h=400&fit=crop', rating: '4.2', price: 'Rs 655' },
+    { id: 'The Bakery Cafe', name: 'The Bakery Cafe', tags: 'Cafe, Bakery', location: 'Thamel, Kathmandu', image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600&h=400&fit=crop', rating: '4.6', price: 'Rs 800' },
+    { id: 'Himalayan Java Coffee', name: 'Himalayan Java Coffee', tags: 'Coffee, Pastries', location: 'Durbar Marg, Kathmandu', image: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=600&h=400&fit=crop', rating: '4.4', price: 'Rs 450' },
+    { id: 'Fire and Ice Pizzeria', name: 'Fire and Ice Pizzeria', tags: 'Italian, Pizza', location: 'Thamel, Kathmandu', image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&h=400&fit=crop', rating: '4.7', price: 'Rs 1200' },
+    { id: 'Dhokaima Cafe', name: 'Dhokaima Cafe', tags: 'Nepali, Traditional', location: 'Patan Dhoka, Lalitpur', image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&h=400&fit=crop', rating: '4.5', price: 'Rs 750' },
+    { id: 'Roadhouse Cafe', name: 'Roadhouse Cafe', tags: 'Continental, Bar', location: 'Thamel, Kathmandu', image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&h=400&fit=crop', rating: '4.3', price: 'Rs 950' },
+    { id: 'Bhojan Griha', name: 'Bhojan Griha', tags: 'Nepali, Cultural', location: 'Dillibazar, Kathmandu', image: 'https://images.unsplash.com/photo-1574484284002-952d92456975?w=600&h=400&fit=crop', rating: '4.6', price: 'Rs 850' },
+    { id: 'Momo Kathmandu', name: 'Momo Kathmandu', tags: 'Nepali, Momo', location: 'Thamel, Kathmandu', image: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=600&h=400&fit=crop', rating: '4.5', price: 'Rs 300' },
+    { id: 'Pizza Hub', name: 'Pizza Hub', tags: 'Italian, Pizza', location: 'New Baneshwor, Kathmandu', image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&h=400&fit=crop', rating: '4.2', price: 'Rs 600' },
+    { id: 'Burger House', name: 'Burger House', tags: 'Fast Food, Burgers', location: 'Lazimpat, Kathmandu', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&h=400&fit=crop', rating: '4.8', price: 'Rs 500' },
+  ];
+
+  const searchResults = searchQuery.trim().length > 0
+    ? ALL_RESTAURANTS.filter(r =>
+        r.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        r.tags.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        r.location.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : [];
+
   // --- AUTO-SCROLL LOGIC ---
   const [activeIndex, setActiveIndex] = useState(0);
   const flatListRef = useRef<FlatList>(null);
@@ -299,8 +322,77 @@ export default function HomeScreen() {
               placeholder="Search for restaurants or dishes" 
               placeholderTextColor={COLORS.textGray}
               style={styles.searchInput}
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+              returnKeyType="search"
             />
+            {searchQuery.length > 0 && (
+              <TouchableOpacity onPress={() => setSearchQuery('')}>
+                <Ionicons name="close-circle" size={20} color={COLORS.textGray} />
+              </TouchableOpacity>
+            )}
           </View>
+
+          {/* SEARCH RESULTS DROPDOWN */}
+          {searchQuery.trim().length > 0 && (
+            <View style={styles.searchDropdown}>
+              {/* Header */}
+              <View style={styles.searchDropdownHeader}>
+                <Text style={styles.searchDropdownTitle}>
+                  {searchResults.length > 0 ? `${searchResults.length} result${searchResults.length > 1 ? 's' : ''}` : 'No results'}
+                </Text>
+              </View>
+
+              {searchResults.length === 0 ? (
+                <View style={styles.noResultsContainer}>
+                  <Ionicons name="search-outline" size={36} color="#DDD" />
+                  <Text style={styles.noResultsTitle}>No restaurants found</Text>
+                  <Text style={styles.noResultsSubtitle}>Try searching for "Pizza", "Momo" or "Cafe"</Text>
+                </View>
+              ) : (
+                searchResults.map((r, index) => (
+                  <TouchableOpacity
+                    key={r.id}
+                    style={[
+                      styles.searchResultRow,
+                      index < searchResults.length - 1 && styles.searchResultBorder
+                    ]}
+                    onPress={() => {
+                      setSearchQuery('');
+                      router.push({
+                        pathname: '/restaurant/[id]',
+                        params: { id: r.id, image: r.image, location: r.location, rating: r.rating }
+                      } as any);
+                    }}
+                    activeOpacity={0.7}
+                  >
+                    {/* Thumbnail */}
+                    <Image
+                      source={{ uri: r.image }}
+                      style={styles.searchResultThumb}
+                    />
+                    {/* Info */}
+                    <View style={styles.searchResultInfo}>
+                      <Text style={styles.searchResultName} numberOfLines={1}>{r.name}</Text>
+                      <Text style={styles.searchResultTags} numberOfLines={1}>{r.tags}</Text>
+                      <View style={styles.searchResultBottom}>
+                        <Ionicons name="location-outline" size={11} color={COLORS.textGray} />
+                        <Text style={styles.searchResultLocation} numberOfLines={1}>{r.location}</Text>
+                      </View>
+                    </View>
+                    {/* Rating + Arrow */}
+                    <View style={styles.searchResultRight}>
+                      <View style={styles.ratingBadge}>
+                        <Ionicons name="star" size={10} color="#FFD700" />
+                        <Text style={styles.ratingText}>{r.rating}</Text>
+                      </View>
+                      <Ionicons name="chevron-forward" size={16} color="#CCC" style={{ marginTop: 6 }} />
+                    </View>
+                  </TouchableOpacity>
+                ))
+              )}
+            </View>
+          )}
 
           {/* TOP CATEGORIES */}
           <View style={styles.topCategories}>
@@ -975,10 +1067,115 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15, 
     alignItems: 'center', 
     height: 50, 
-    marginBottom: 25,
+    marginBottom: 10,
   },
   searchIcon: { marginRight: 10 },
   searchInput: { flex: 1, height: '100%', fontSize: 16, color: COLORS.textDark },
+
+  // Search dropdown
+  searchDropdown: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    marginBottom: 16,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 12,
+    elevation: 8,
+  },
+  searchDropdownHeader: {
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F5F5F5',
+    backgroundColor: '#FAFAFA',
+  },
+  searchDropdownTitle: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: COLORS.textGray,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+  searchResultRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: '#FFFFFF',
+  },
+  searchResultBorder: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#F5F5F5',
+  },
+  searchResultThumb: {
+    width: 52,
+    height: 52,
+    borderRadius: 10,
+    backgroundColor: '#F0F0F0',
+    marginRight: 12,
+  },
+  searchResultInfo: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  searchResultName: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: '#1A1A1A',
+    marginBottom: 2,
+  },
+  searchResultTags: {
+    fontSize: 12,
+    color: COLORS.primaryOrange,
+    fontWeight: '500',
+    marginBottom: 3,
+  },
+  searchResultBottom: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 3,
+  },
+  searchResultLocation: {
+    fontSize: 11,
+    color: COLORS.textGray,
+  },
+  searchResultRight: {
+    alignItems: 'center',
+    marginLeft: 8,
+  },
+  ratingBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFF8E1',
+    paddingHorizontal: 6,
+    paddingVertical: 3,
+    borderRadius: 8,
+    gap: 3,
+  },
+  ratingText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#F59E0B',
+  },
+  noResultsContainer: {
+    alignItems: 'center',
+    paddingVertical: 30,
+    paddingHorizontal: 20,
+  },
+  noResultsTitle: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: '#333',
+    marginTop: 10,
+  },
+  noResultsSubtitle: {
+    fontSize: 13,
+    color: COLORS.textGray,
+    marginTop: 4,
+    textAlign: 'center',
+  },
   topCategories: { flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 10 },
   topIconContainer: {
     width: 60, height: 60, borderRadius: 30, backgroundColor: COLORS.white,
