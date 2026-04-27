@@ -77,4 +77,3 @@ const styles = StyleSheet.create({
   navItem: { alignItems: 'center', justifyContent: 'center' },
   navText: { fontSize: 10, marginTop: 4, fontWeight: '500' }
 });
-// updated: 2026-04-27T15:30:00

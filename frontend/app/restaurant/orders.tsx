@@ -319,4 +319,3 @@ const styles = StyleSheet.create({
   emptySubtitle: { fontSize: 14, color: COLORS.gray, textAlign: 'center', marginTop: 5 },
 });
 
-// updated: 2026-04-27T12:30:00

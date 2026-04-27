@@ -234,4 +234,3 @@ const styles = StyleSheet.create({
   confirmText: { color: COLORS.white, fontWeight: 'bold', fontSize: 16 },
 });
 
-// updated: 2026-04-27T14:00:00
