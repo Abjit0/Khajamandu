@@ -767,3 +767,5 @@ const styles = StyleSheet.create({
   aboutVersion: { fontSize: 13, color: COLORS.primary, fontWeight: 'bold', marginBottom: 10 },
   aboutDesc: { fontSize: 13, color: COLORS.gray, lineHeight: 20, marginBottom: 12 },
 });
+
+// updated: 2026-04-27T09:30:00
