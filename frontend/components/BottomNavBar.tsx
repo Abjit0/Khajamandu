@@ -51,15 +51,7 @@ export default function BottomNavBar() {
         icon="person-outline" 
         text="Account" 
         active={isActive('/profile')} 
-        // CHANGE: Use replace() instead of push()
         onPress={() => router.replace('/profile')} 
-      />
-      <NavButton 
-        icon="grid-outline" 
-        text="More" 
-        active={isActive('/customer/more')} 
-        // CHANGE: Use replace() instead of push()
-        onPress={() => router.replace('/customer/more')} 
       />
     </View>
   );

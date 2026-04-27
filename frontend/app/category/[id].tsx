@@ -1,7 +1,7 @@
-import React, { useState, useRef } from 'react';
+import React from 'react';
 import { 
   View, Text, StyleSheet, ScrollView, 
-  Image, TouchableOpacity, Dimensions, Platform, Animated 
+  Image, TouchableOpacity, Dimensions, Platform
 } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter, useLocalSearchParams } from 'expo-router';
@@ -187,39 +187,15 @@ const RestaurantCard = ({ data }: { data: Restaurant }) => {
   // ✅ 1. Get the router
   const router = useRouter();
   
-  // ✅ 2. Add favorite state and animation
-  const [isFavorite, setIsFavorite] = useState(false);
-  const scaleAnim = useRef(new Animated.Value(1)).current;
-
-  const handleFavoritePress = () => {
-    // Toggle favorite
-    setIsFavorite(!isFavorite);
-    
-    // Animate: scale up then back down
-    Animated.sequence([
-      Animated.timing(scaleAnim, {
-        toValue: 1.3,
-        duration: 150,
-        useNativeDriver: true,
-      }),
-      Animated.timing(scaleAnim, {
-        toValue: 1,
-        duration: 150,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  };
-
   return (
-    // ✅ 3. Wrap in TouchableOpacity and add onPress logic
     <TouchableOpacity 
       activeOpacity={0.7} 
       onPress={() => {
         router.push({
-          pathname: '/restaurant/[id]', // Navigate to the menu page
+          pathname: '/restaurant/[id]',
           params: { 
-            id: data.name,       // Send the Name as ID
-            image: data.logo,    // Send Image
+            id: data.name,
+            image: data.logo,
             location: data.location,
             rating: data.rating
           } 
@@ -251,17 +227,6 @@ const RestaurantCard = ({ data }: { data: Restaurant }) => {
                 </View>
             ) : null}
         </View>
-        
-        {/* Heart Icon with Animation */}
-        <TouchableOpacity style={{ padding: 5 }} onPress={handleFavoritePress}>
-            <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
-              <Ionicons 
-                name={isFavorite ? "heart" : "heart-outline"} 
-                size={24} 
-                color={isFavorite ? "#FF0000" : COLORS.textGray} 
-              />
-            </Animated.View>
-        </TouchableOpacity>
       </View>
     </TouchableOpacity>
   );

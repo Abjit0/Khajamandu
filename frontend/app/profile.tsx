@@ -30,6 +30,8 @@ export default function ProfileScreen() {
   const [editName, setEditName] = useState('');
   const [editPhone, setEditPhone] = useState('');
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showHelpModal, setShowHelpModal] = useState(false);
+  const [showAboutModal, setShowAboutModal] = useState(false);
 
   useEffect(() => {
     loadUserData();
@@ -224,18 +226,18 @@ export default function ProfileScreen() {
           <Ionicons name="chevron-forward" size={20} color={COLORS.gray} />
         </TouchableOpacity>
         
-        <TouchableOpacity style={styles.menuItem}>
-          <Ionicons name="notifications-outline" size={24} color={COLORS.primary} />
-          <Text style={styles.menuText}>Notifications</Text>
-          <Ionicons name="chevron-forward" size={20} color={COLORS.gray} />
-        </TouchableOpacity>
-        
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => setShowHelpModal(true)}>
           <Ionicons name="help-circle-outline" size={24} color={COLORS.primary} />
           <Text style={styles.menuText}>Help & Support</Text>
           <Ionicons name="chevron-forward" size={20} color={COLORS.gray} />
         </TouchableOpacity>
-        
+
+        <TouchableOpacity style={styles.menuItem} onPress={() => setShowAboutModal(true)}>
+          <Ionicons name="information-circle-outline" size={24} color={COLORS.primary} />
+          <Text style={styles.menuText}>About</Text>
+          <Ionicons name="chevron-forward" size={20} color={COLORS.gray} />
+        </TouchableOpacity>
+
         <TouchableOpacity style={[styles.menuItem, styles.logoutItem]} onPress={handleLogout}>
           <Ionicons name="log-out-outline" size={24} color={COLORS.error} />
           <Text style={[styles.menuText, styles.logoutText]}>Logout</Text>
@@ -282,9 +284,6 @@ export default function ProfileScreen() {
               
               <View style={styles.orderFooter}>
                 <Text style={styles.orderTotal}>Rs {order.totalAmount}</Text>
-                <TouchableOpacity style={styles.reorderButton}>
-                  <Text style={styles.reorderText}>Reorder</Text>
-                </TouchableOpacity>
               </View>
             </View>
           ))}
@@ -471,6 +470,64 @@ export default function ProfileScreen() {
           </View>
         </View>
       </Modal>
+
+      {/* Help & Support Modal */}
+      <Modal visible={showHelpModal} transparent animationType="slide">
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalBox}>
+            <View style={styles.modalHeader}>
+              <Ionicons name="help-circle" size={28} color={COLORS.primary} />
+              <Text style={[styles.modalTitle, { flex: 1 }]}>Help & Support</Text>
+              <TouchableOpacity onPress={() => setShowHelpModal(false)}>
+                <Ionicons name="close" size={24} color={COLORS.gray} />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.infoRow}>
+              <Ionicons name="mail-outline" size={18} color={COLORS.primary} />
+              <Text style={styles.infoText}>support@khajamandu.com</Text>
+            </View>
+            <View style={styles.infoRow}>
+              <Ionicons name="call-outline" size={18} color={COLORS.primary} />
+              <Text style={styles.infoText}>+977-01-4XXXXXX</Text>
+            </View>
+            <View style={styles.infoRow}>
+              <Ionicons name="time-outline" size={18} color={COLORS.primary} />
+              <Text style={styles.infoText}>Available: 9 AM – 9 PM, Sun–Fri</Text>
+            </View>
+            <Text style={styles.helpNote}>
+              For order issues, payment problems, or any queries — reach out to us and we'll get back to you within 24 hours.
+            </Text>
+          </View>
+        </View>
+      </Modal>
+
+      {/* About Modal */}
+      <Modal visible={showAboutModal} transparent animationType="slide">
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalBox}>
+            <View style={styles.modalHeader}>
+              <Ionicons name="information-circle" size={28} color={COLORS.primary} />
+              <Text style={[styles.modalTitle, { flex: 1 }]}>About Khajamandu</Text>
+              <TouchableOpacity onPress={() => setShowAboutModal(false)}>
+                <Ionicons name="close" size={24} color={COLORS.gray} />
+              </TouchableOpacity>
+            </View>
+            <Text style={styles.aboutVersion}>Version 1.0.0</Text>
+            <Text style={styles.aboutDesc}>
+              Khajamandu is a food delivery platform connecting customers with local restaurants in Kathmandu. Order your favourite meals and get them delivered to your doorstep.
+            </Text>
+            <View style={styles.infoRow}>
+              <Ionicons name="globe-outline" size={18} color={COLORS.primary} />
+              <Text style={styles.infoText}>www.khajamandu.com</Text>
+            </View>
+            <View style={styles.infoRow}>
+              <Ionicons name="location-outline" size={18} color={COLORS.primary} />
+              <Text style={styles.infoText}>Kathmandu, Nepal</Text>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
     </SafeAreaView>
   );
 }
@@ -695,7 +752,8 @@ const styles = StyleSheet.create({
 
   modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center' },
   modalBox: { backgroundColor: COLORS.white, borderRadius: 16, padding: 24, width: '85%' },
-  modalTitle: { fontSize: 18, fontWeight: 'bold', color: COLORS.dark, marginBottom: 16 },
+  modalHeader: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 16 },
+  modalTitle: { fontSize: 18, fontWeight: 'bold', color: COLORS.dark },
   modalInput: {
     backgroundColor: COLORS.bg, borderRadius: 10, padding: 14,
     fontSize: 15, marginBottom: 12, borderWidth: 1, borderColor: '#E0E0E0'
@@ -703,4 +761,9 @@ const styles = StyleSheet.create({
   modalActions: { flexDirection: 'row', gap: 10, marginTop: 8 },
   modalBtn: { flex: 1, padding: 14, borderRadius: 10, alignItems: 'center' },
   modalBtnText: { color: COLORS.white, fontWeight: 'bold', fontSize: 15 },
+  infoRow: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 10 },
+  infoText: { fontSize: 14, color: COLORS.dark },
+  helpNote: { fontSize: 13, color: COLORS.gray, lineHeight: 20, marginTop: 8 },
+  aboutVersion: { fontSize: 13, color: COLORS.primary, fontWeight: 'bold', marginBottom: 10 },
+  aboutDesc: { fontSize: 13, color: COLORS.gray, lineHeight: 20, marginBottom: 12 },
 });
