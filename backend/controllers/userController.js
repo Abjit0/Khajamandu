@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 // Update user profile
 exports.updateProfile = async (req, res) => {
     try {
-        const { userId, name, phone, vehicleType, licenseNumber } = req.body;
+        const { userId, name, phone, vehicleType, licenseNumber, restaurantName, cuisine, restaurantAddress, restaurantPhone } = req.body;
 
         const user = await User.findById(userId);
         
@@ -15,14 +15,22 @@ exports.updateProfile = async (req, res) => {
             });
         }
 
-        // Update profile fields
-        user.profile.name = name || user.profile.name;
-        user.profile.phone = phone || user.profile.phone;
+        // Update common profile fields
+        if (name) user.profile.name = name;
+        if (phone) user.profile.phone = phone;
         
         // Update rider-specific fields if applicable
         if (user.role === 'rider') {
-            user.profile.vehicleType = vehicleType || user.profile.vehicleType;
-            user.profile.licenseNumber = licenseNumber || user.profile.licenseNumber;
+            if (vehicleType) user.profile.vehicleType = vehicleType;
+            if (licenseNumber) user.profile.licenseNumber = licenseNumber;
+        }
+
+        // Update restaurant-specific fields if applicable
+        if (user.role === 'restaurant') {
+            if (restaurantName) user.profile.restaurantName = restaurantName;
+            if (cuisine) user.profile.cuisine = cuisine;
+            if (restaurantAddress) user.profile.restaurantAddress = restaurantAddress;
+            if (restaurantPhone) user.profile.restaurantPhone = restaurantPhone;
         }
 
         await user.save();

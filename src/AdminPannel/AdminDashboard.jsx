@@ -23,6 +23,7 @@ const AdminDashboard = () => {
     if (token) {
       fetchDashboardData();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token, activeTab]);
 
   const handleLogin = async (e) => {
@@ -103,6 +104,19 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleDeleteUser = async (userId, userName) => {
+    if (!window.confirm(`Delete "${userName}" and ALL their data permanently? This cannot be undone.`)) return;
+
+    try {
+      const headers = { Authorization: `Bearer ${token}` };
+      await axios.delete(`${API_URL}/admin/delete/${userId}`, { headers });
+      alert('User and all associated data deleted successfully!');
+      fetchDashboardData();
+    } catch (error) {
+      alert(error.response?.data?.message || 'Failed to delete user');
+    }
+  };
+
   const handleReject = async (userId) => {
     if (!window.confirm('Reject and delete this user? This cannot be undone.')) return;
 
@@ -115,13 +129,11 @@ const AdminDashboard = () => {
       alert('Failed to reject user');
     }
   };
-
-  // Login Screen
   if (!token) {
     return (
       <div className="login-container">
         <div className="login-box">
-          <h1>🍽️ Khajamandu Admin</h1>
+          <h1>🍜🥘 Khajamandu Admin</h1>
           <p>Admin Dashboard Login</p>
           <form onSubmit={handleLogin}>
             <input
@@ -152,7 +164,7 @@ const AdminDashboard = () => {
   return (
     <div className="admin-dashboard">
       <div className="sidebar">
-        <h2>🍽️ Khajamandu</h2>
+        <h2>🍜🥘 Khajamandu</h2>
         <nav>
           <button
             className={activeTab === 'dashboard' ? 'active' : ''}
@@ -316,10 +328,10 @@ const AdminDashboard = () => {
                     <p><strong>Registered:</strong> {new Date(user.createdAt).toLocaleDateString()}</p>
                     <div className="user-actions">
                       <button className="approve-btn" onClick={() => handleApprove(user._id)}>
-                        ✅ Approve
+                        ✓ Approve
                       </button>
                       <button className="reject-btn" onClick={() => handleReject(user._id)}>
-                        ❌ Reject
+                        ✗ Reject
                       </button>
                     </div>
                   </div>
@@ -340,6 +352,7 @@ const AdminDashboard = () => {
                   <th>Role</th>
                   <th>Status</th>
                   <th>Registered</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -354,6 +367,16 @@ const AdminDashboard = () => {
                       </span>
                     </td>
                     <td>{new Date(user.createdAt).toLocaleDateString()}</td>
+                    <td>
+                      {user.role !== 'admin' && (
+                        <button
+                          className="delete-btn"
+                          onClick={() => handleDeleteUser(user._id, user.profile?.name || user.email)}
+                        >
+                          🗑️ Delete
+                        </button>
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>

@@ -1,5 +1,6 @@
-import React from 'react';
-import { View, Text, TextInput, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 const COLORS = {
   white: '#FFFFFF',
@@ -10,7 +11,6 @@ const COLORS = {
   borderColor: '#E8E8E8',
 };
 
-// If using TypeScript, define the interface. If JS, this is ignored.
 interface CustomInputProps {
   value: string;
   setValue: (text: string) => void;
@@ -18,8 +18,8 @@ interface CustomInputProps {
   isPassword?: boolean;
   keyboardType?: 'default' | 'email-address' | 'numeric' | 'phone-pad';
   error?: string;
-  editable?: boolean; // We added this
-  maxLength?: number; // We added this
+  editable?: boolean;
+  maxLength?: number;
 }
 
 const CustomInput = ({ 
@@ -29,27 +29,42 @@ const CustomInput = ({
   isPassword, 
   keyboardType = 'default',
   error,
-  editable = true, // Default to true (unlocked)
+  editable = true,
   maxLength,
 }: CustomInputProps) => {
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
     <View style={styles.container}>
       <View style={[
         styles.inputContainer, 
         error ? styles.inputError : null,
-        !editable ? styles.inputDisabled : null // Add grey style if locked
+        !editable ? styles.inputDisabled : null,
       ]}>
         <TextInput 
           value={value}
           onChangeText={setValue}
           placeholder={placeholder}
-          style={[styles.input, !editable && { color: COLORS.textGray }]} // Grey text if locked
-          secureTextEntry={isPassword}
+          style={[styles.input, !editable && { color: COLORS.textGray }]}
+          secureTextEntry={isPassword && !showPassword}
           keyboardType={keyboardType}
-          editable={editable} // Pass this down
-          maxLength={maxLength} // Pass this down
+          editable={editable}
+          maxLength={maxLength}
           placeholderTextColor={COLORS.textGray}
         />
+        {isPassword && (
+          <TouchableOpacity
+            onPress={() => setShowPassword(prev => !prev)}
+            style={styles.eyeButton}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          >
+            <Ionicons
+              name={showPassword ? 'eye-outline' : 'eye-off-outline'}
+              size={20}
+              color={COLORS.textGray}
+            />
+          </TouchableOpacity>
+        )}
       </View>
       {error && <Text style={styles.errorText}>{error}</Text>}
     </View>
@@ -66,26 +81,32 @@ const styles = StyleSheet.create({
     width: '100%',
     borderColor: COLORS.borderColor,
     borderWidth: 1,
-    borderRadius: 30, // Matching your rounded design
+    borderRadius: 30,
     paddingHorizontal: 20,
-    paddingVertical: 0, // Remove vertical padding to let TextInput handle it
-    height: 55, // Fixed height for consistency
+    paddingVertical: 0,
+    height: 55,
     justifyContent: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   input: {
+    flex: 1,
     fontSize: 16,
     color: COLORS.textDark,
-    height: '100%', // Take full height
-    textAlignVertical: 'center', // Center text vertically
-    paddingVertical: 0, // Remove default padding
-    includeFontPadding: false, // Remove extra font padding on Android
+    height: '100%',
+    textAlignVertical: 'center',
+    paddingVertical: 0,
+    includeFontPadding: false,
+  },
+  eyeButton: {
+    paddingLeft: 8,
   },
   inputError: {
     borderColor: COLORS.red,
     borderWidth: 1,
   },
   inputDisabled: {
-    backgroundColor: '#F0F0F0', // Light grey background when locked
+    backgroundColor: '#F0F0F0',
   },
   errorText: {
     color: COLORS.red,

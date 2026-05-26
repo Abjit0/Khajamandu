@@ -96,7 +96,7 @@ export default function RestaurantOrders() {
   ];
 
   return (
-    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+    <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Orders</Text>
         <TouchableOpacity onPress={fetchOrders}>

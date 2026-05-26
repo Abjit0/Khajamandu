@@ -17,6 +17,8 @@ const COLORS = {
 
 export default function SignupEnhancedScreen() {
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -213,21 +215,33 @@ export default function SignupEnhancedScreen() {
         multiline
       />
       
-      <TextInput
-        style={styles.input}
-        placeholder="Password *"
-        value={formData.password}
-        onChangeText={(text) => setFormData({...formData, password: text})}
-        secureTextEntry
-      />
+      <View style={styles.passwordContainer}>
+        <TextInput
+          style={styles.passwordInput}
+          placeholder="Password *"
+          value={formData.password}
+          onChangeText={(text) => setFormData({...formData, password: text})}
+          secureTextEntry={!showPassword}
+          placeholderTextColor={COLORS.gray}
+        />
+        <TouchableOpacity onPress={() => setShowPassword(prev => !prev)} style={styles.eyeBtn}>
+          <Ionicons name={showPassword ? 'eye-outline' : 'eye-off-outline'} size={20} color={COLORS.gray} />
+        </TouchableOpacity>
+      </View>
       
-      <TextInput
-        style={styles.input}
-        placeholder="Confirm Password *"
-        value={formData.confirmPassword}
-        onChangeText={(text) => setFormData({...formData, confirmPassword: text})}
-        secureTextEntry
-      />
+      <View style={styles.passwordContainer}>
+        <TextInput
+          style={styles.passwordInput}
+          placeholder="Confirm Password *"
+          value={formData.confirmPassword}
+          onChangeText={(text) => setFormData({...formData, confirmPassword: text})}
+          secureTextEntry={!showConfirmPassword}
+          placeholderTextColor={COLORS.gray}
+        />
+        <TouchableOpacity onPress={() => setShowConfirmPassword(prev => !prev)} style={styles.eyeBtn}>
+          <Ionicons name={showConfirmPassword ? 'eye-outline' : 'eye-off-outline'} size={20} color={COLORS.gray} />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 
@@ -411,6 +425,24 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     fontSize: 16,
     elevation: 1
+  },
+  passwordContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: COLORS.white,
+    borderRadius: 12,
+    marginBottom: 12,
+    elevation: 1,
+    paddingRight: 15,
+  },
+  passwordInput: {
+    flex: 1,
+    padding: 15,
+    fontSize: 16,
+    color: COLORS.dark,
+  },
+  eyeBtn: {
+    padding: 4,
   },
   
   pickerContainer: { marginBottom: 15 },

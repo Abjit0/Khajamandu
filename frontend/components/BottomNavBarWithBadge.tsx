@@ -100,12 +100,6 @@ export default function BottomNavBarWithBadge() {
         active={isActive('/profile')} 
         onPress={() => router.replace('/profile')} 
       />
-      <NavButton 
-        icon="grid-outline" 
-        text="More" 
-        active={isActive('/customer/more')} 
-        onPress={() => router.replace('/customer/more')} 
-      />
     </View>
   );
 }
@@ -134,36 +128,32 @@ const NavButton = ({ icon, text, active, onPress, badge }: NavButtonProps) => {
 
 const styles = StyleSheet.create({
   bottomNavBar: {
-    position: 'absolute', 
-    bottom: 0, 
-    left: 0, 
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
     right: 0,
-    backgroundColor: COLORS.white, 
-    flexDirection: 'row', 
+    backgroundColor: COLORS.white,
+    flexDirection: 'row',
     justifyContent: 'space-around',
-    paddingTop: 8, 
-    paddingBottom: Platform.OS === 'ios' ? 8 : 8,
-    borderTopWidth: 1, 
-    borderTopColor: '#E0E0E0', 
+    paddingVertical: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#f0f0f0',
     elevation: 10,
+    paddingBottom: Platform.OS === 'ios' ? 20 : 10,
   },
-  navItem: { 
-    alignItems: 'center', 
-    justifyContent: 'center',
-    minWidth: 60,
-  },
-  iconContainer: { 
-    position: 'relative',
-    height: 26,
-    width: 26,
+  navItem: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 4,
   },
-  navText: { 
-    fontSize: 12, 
+  iconContainer: {
+    position: 'relative',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  navText: {
+    fontSize: 10,
+    marginTop: 4,
     fontWeight: '500',
-    textAlign: 'center',
   },
   badge: {
     position: 'absolute',
@@ -175,11 +165,11 @@ const styles = StyleSheet.create({
     height: 18,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 4
+    paddingHorizontal: 4,
   },
   badgeText: {
     color: COLORS.white,
     fontSize: 10,
-    fontWeight: 'bold'
-  }
+    fontWeight: 'bold',
+  },
 });

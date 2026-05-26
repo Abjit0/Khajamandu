@@ -19,6 +19,7 @@ export default function ScheduleOrderScreen() {
   const [hour, setHour] = useState('');
   const [minute, setMinute] = useState('');
   const [ampm, setAmpm] = useState<'AM' | 'PM'>('AM');
+  const [orderType, setOrderType] = useState<'dine-in' | 'delivery'>('dine-in');
 
   const today = new Date();
 
@@ -56,107 +57,130 @@ export default function ScheduleOrderScreen() {
         data: params.data,
         scheduledTime: scheduledDate.toISOString(),
         isPreOrder: 'true',
+        orderType: orderType,
       }
     } as any);
   };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+      <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
 
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color={COLORS.dark} />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Schedule Order</Text>
-        <View style={{ width: 24 }} />
-      </View>
-
-      <View style={styles.content}>
-
-        {/* Info */}
-        <View style={styles.infoBox}>
-          <Ionicons name="time-outline" size={22} color={COLORS.primary} />
-          <Text style={styles.infoText}>
-            Pre-order your food so it's freshly prepared and ready when you arrive.
-          </Text>
+        {/* Header */}
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => router.back()}>
+            <Ionicons name="arrow-back" size={24} color={COLORS.dark} />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Schedule Order</Text>
+          <View style={{ width: 24 }} />
         </View>
 
-        {/* Time Input */}
-        <Text style={styles.label}>Select Time</Text>
-        <View style={styles.timeRow}>
+        <View style={styles.content}>
 
-          {/* Hour */}
-          <View style={styles.timeBox}>
-            <Text style={styles.timeBoxLabel}>Hour</Text>
-            <TextInput
-              style={styles.timeInput}
-              placeholder="1"
-              value={hour}
-              onChangeText={setHour}
-              keyboardType="number-pad"
-              maxLength={2}
-            />
-          </View>
-
-          <Text style={styles.colon}>:</Text>
-
-          {/* Minute */}
-          <View style={styles.timeBox}>
-            <Text style={styles.timeBoxLabel}>Minute</Text>
-            <TextInput
-              style={styles.timeInput}
-              placeholder="00"
-              value={minute}
-              onChangeText={setMinute}
-              keyboardType="number-pad"
-              maxLength={2}
-            />
-          </View>
-
-          {/* AM / PM toggle pill */}
-          <View style={styles.ampmBox}>
-            <Text style={styles.timeBoxLabel}>  </Text>
-            <View style={styles.ampmPill}>
-              <TouchableOpacity
-                style={[styles.ampmBtn, ampm === 'AM' && styles.ampmActive]}
-                onPress={() => setAmpm('AM')}
-              >
-                <Text style={[styles.ampmText, ampm === 'AM' && styles.ampmTextActive]}>AM</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.ampmBtn, ampm === 'PM' && styles.ampmActive]}
-                onPress={() => setAmpm('PM')}
-              >
-                <Text style={[styles.ampmText, ampm === 'PM' && styles.ampmTextActive]}>PM</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-
-        </View>
-
-        {/* Preview */}
-        {hour !== '' && minute !== '' && (
-          <View style={styles.previewBox}>
-            <Ionicons name="calendar-outline" size={18} color={COLORS.primary} />
-            <Text style={styles.previewText}>
-              Today at {hour}:{minute.padStart(2, '0')} {ampm}
+          {/* Info */}
+          <View style={styles.infoBox}>
+            <Ionicons name="time-outline" size={22} color={COLORS.primary} />
+            <Text style={styles.infoText}>
+              Pre-order your food so it's freshly prepared and ready when you arrive.
             </Text>
           </View>
-        )}
 
-        {/* Hint */}
-        <Text style={styles.hint}>Must be at least 30 minutes from now</Text>
+          {/* Order Type Selector */}
+          <Text style={styles.label}>Order Type</Text>
+          <View style={styles.orderTypeRow}>
+            <TouchableOpacity
+              style={[styles.orderTypeBtn, orderType === 'dine-in' && styles.orderTypeBtnActive]}
+              onPress={() => setOrderType('dine-in')}
+            >
+              <Ionicons name="restaurant" size={22} color={orderType === 'dine-in' ? COLORS.white : COLORS.gray} />
+              <Text style={[styles.orderTypeText, orderType === 'dine-in' && styles.orderTypeTextActive]}>Dine-in</Text>
+              <Text style={[styles.orderTypeSubText, orderType === 'dine-in' && styles.orderTypeSubTextActive]}>Eat at restaurant</Text>
+            </TouchableOpacity>
 
-        {/* Confirm */}
-        <TouchableOpacity style={styles.confirmBtn} onPress={handleConfirm}>
-          <Ionicons name="checkmark-circle-outline" size={20} color={COLORS.white} />
-          <Text style={styles.confirmText}>Confirm Schedule</Text>
-        </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.orderTypeBtn, orderType === 'delivery' && styles.orderTypeBtnActive]}
+              onPress={() => setOrderType('delivery')}
+            >
+              <Ionicons name="bicycle" size={22} color={orderType === 'delivery' ? COLORS.white : COLORS.gray} />
+              <Text style={[styles.orderTypeText, orderType === 'delivery' && styles.orderTypeTextActive]}>Delivery</Text>
+              <Text style={[styles.orderTypeSubText, orderType === 'delivery' && styles.orderTypeSubTextActive]}>Deliver to address</Text>
+            </TouchableOpacity>
+          </View>
 
-      </View>
-    </SafeAreaView>
+          {/* Time Input */}
+          <Text style={styles.label}>Select Time</Text>
+          <View style={styles.timeRow}>
+
+            {/* Hour */}
+            <View style={styles.timeBox}>
+              <Text style={styles.timeBoxLabel}>Hour</Text>
+              <TextInput
+                style={styles.timeInput}
+                placeholder="1"
+                value={hour}
+                onChangeText={setHour}
+                keyboardType="number-pad"
+                maxLength={2}
+              />
+            </View>
+
+            <Text style={styles.colon}>:</Text>
+
+            {/* Minute */}
+            <View style={styles.timeBox}>
+              <Text style={styles.timeBoxLabel}>Minute</Text>
+              <TextInput
+                style={styles.timeInput}
+                placeholder="00"
+                value={minute}
+                onChangeText={setMinute}
+                keyboardType="number-pad"
+                maxLength={2}
+              />
+            </View>
+
+            {/* AM / PM toggle pill */}
+            <View style={styles.ampmBox}>
+              <Text style={styles.timeBoxLabel}>  </Text>
+              <View style={styles.ampmPill}>
+                <TouchableOpacity
+                  style={[styles.ampmBtn, ampm === 'AM' && styles.ampmActive]}
+                  onPress={() => setAmpm('AM')}
+                >
+                  <Text style={[styles.ampmText, ampm === 'AM' && styles.ampmTextActive]}>AM</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.ampmBtn, ampm === 'PM' && styles.ampmActive]}
+                  onPress={() => setAmpm('PM')}
+                >
+                  <Text style={[styles.ampmText, ampm === 'PM' && styles.ampmTextActive]}>PM</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+          </View>
+
+          {/* Preview */}
+          {hour !== '' && minute !== '' && (
+            <View style={styles.previewBox}>
+              <Ionicons name="calendar-outline" size={18} color={COLORS.primary} />
+              <Text style={styles.previewText}>
+                Today at {hour}:{minute.padStart(2, '0')} {ampm} · {orderType === 'dine-in' ? '🍽️ Dine-in' : '🚗 Delivery'}
+              </Text>
+            </View>
+          )}
+
+          {/* Hint */}
+          <Text style={styles.hint}>Must be at least 30 minutes from now</Text>
+
+          {/* Confirm */}
+          <TouchableOpacity style={styles.confirmBtn} onPress={handleConfirm}>
+            <Ionicons name="checkmark-circle-outline" size={20} color={COLORS.white} />
+            <Text style={styles.confirmText}>Confirm Schedule</Text>
+          </TouchableOpacity>
+
+        </View>
+      </SafeAreaView>
     </TouchableWithoutFeedback>
   );
 }
@@ -180,12 +204,18 @@ const styles = StyleSheet.create({
 
   label: { fontSize: 15, fontWeight: 'bold', color: COLORS.dark, marginBottom: 10 },
 
-  dayRow: { flexDirection: 'row', gap: 12, marginBottom: 24 },
-  dayBtn: { flex: 1 },
-  dayBtnActive: {},
-  dayBtnText: {},
-  dayBtnDate: {},
-  dayBtnTextActive: {},
+  // Order Type
+  orderTypeRow: { flexDirection: 'row', gap: 12, marginBottom: 24 },
+  orderTypeBtn: {
+    flex: 1, alignItems: 'center', justifyContent: 'center',
+    padding: 16, borderRadius: 14, borderWidth: 2,
+    borderColor: '#E0E0E0', backgroundColor: COLORS.white, gap: 4,
+  },
+  orderTypeBtnActive: { backgroundColor: COLORS.primary, borderColor: COLORS.primary },
+  orderTypeText: { fontSize: 15, fontWeight: 'bold', color: COLORS.gray },
+  orderTypeTextActive: { color: COLORS.white },
+  orderTypeSubText: { fontSize: 11, color: COLORS.gray },
+  orderTypeSubTextActive: { color: 'rgba(255,255,255,0.8)' },
 
   timeRow: {
     flexDirection: 'row', alignItems: 'flex-end',
@@ -203,18 +233,10 @@ const styles = StyleSheet.create({
 
   ampmBox: { alignItems: 'center' },
   ampmPill: {
-    flexDirection: 'row',
-    backgroundColor: '#F0F0F0',
-    borderRadius: 12,
-    padding: 4,
-    height: 56,
-    alignItems: 'center',
+    flexDirection: 'row', backgroundColor: '#F0F0F0',
+    borderRadius: 12, padding: 4, height: 56, alignItems: 'center',
   },
-  ampmBtn: {
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 10,
-  },
+  ampmBtn: { paddingHorizontal: 16, paddingVertical: 10, borderRadius: 10 },
   ampmActive: { backgroundColor: COLORS.primary },
   ampmText: { fontSize: 14, fontWeight: 'bold', color: COLORS.gray },
   ampmTextActive: { color: COLORS.white },
@@ -233,4 +255,3 @@ const styles = StyleSheet.create({
   },
   confirmText: { color: COLORS.white, fontWeight: 'bold', fontSize: 16 },
 });
-

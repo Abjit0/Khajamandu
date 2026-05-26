@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   View, Text, StyleSheet, ScrollView, 
-  TextInput, Image, TouchableOpacity, Dimensions, Platform, FlatList, Modal, Alert 
+  TextInput, Image, TouchableOpacity, Dimensions, Platform, FlatList, Modal, Alert, KeyboardAvoidingView
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import BottomNavBar from '../../components/BottomNavBar'; 
+import BottomNavBar from '../../components/BottomNavBar';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import * as Location from 'expo-location';
 // Get full screen width
 const { width } = Dimensions.get('window');
 // Calculate banner width (Screen width - 40px padding) - FIXED BANNER SIZE
@@ -120,144 +119,40 @@ export default function HomeScreen() {
     );
   };
 
-  const handleUseCurrentLocation = async () => {
-    try {
-      // Show loading state
-      setCurrentLocation('Detecting location...');
-      
-      console.log('🔍 Requesting location permission...');
-      
-      // Request location permission
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      
-      console.log('📍 Permission status:', status);
-      
-      if (status !== 'granted') {
-        Alert.alert(
-          'Permission Denied',
-          'Location permission is required to detect your current location. Please enable it in settings.',
-          [{ text: 'OK' }]
-        );
-        setCurrentLocation('Thamel, Kathmandu'); // Reset to default
-        return;
-      }
-
-      console.log('📡 Getting current position...');
-      
-      // Get current position with timeout
-      const location = await Location.getCurrentPositionAsync({
-        accuracy: Location.Accuracy.Balanced,
-        timeInterval: 5000,
-        distanceInterval: 0,
-      });
-
-      console.log('✅ Location received:', location.coords);
-
-      // Reverse geocode to get address
-      console.log('🗺️ Reverse geocoding...');
-      const address = await Location.reverseGeocodeAsync({
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-      });
-
-      console.log('📍 Address data:', address);
-
-      if (address && address.length > 0) {
-        const addr = address[0];
-        console.log('🏠 Address details:', addr);
-        
-        // Format the address nicely - try multiple combinations
-        let formattedAddress = '';
-        
-        // Try to build address from available fields
-        if (addr.name && !addr.name.includes('+')) {
-          formattedAddress = addr.name;
-        } else if (addr.street) {
-          formattedAddress = addr.street;
-        }
-        
-        // Add district/subregion
-        if (addr.district) {
-          formattedAddress += formattedAddress ? ', ' : '';
-          formattedAddress += addr.district;
-        } else if (addr.subregion) {
-          formattedAddress += formattedAddress ? ', ' : '';
-          formattedAddress += addr.subregion;
-        }
-        
-        // Add city
-        if (addr.city) {
-          formattedAddress += formattedAddress ? ', ' : '';
-          formattedAddress += addr.city;
-        }
-        
-        // If still empty, try region or country
-        if (!formattedAddress && addr.region) {
-          formattedAddress = addr.region;
-        }
-        
-        // Last resort: use coordinates
-        if (!formattedAddress) {
-          formattedAddress = `${location.coords.latitude.toFixed(4)}, ${location.coords.longitude.toFixed(4)}`;
-        }
-        
-        console.log('✅ Formatted address:', formattedAddress);
-        
-        setCurrentLocation(formattedAddress);
-        setShowLocationModal(false);
-        
-        Alert.alert(
-          'Location Detected',
-          `Your location: ${formattedAddress}`,
-          [{ text: 'OK' }]
-        );
-      } else {
-        // Fallback if reverse geocoding fails
-        console.log('⚠️ No address data, using coordinates');
-        const coordsAddress = `${location.coords.latitude.toFixed(4)}, ${location.coords.longitude.toFixed(4)}`;
-        setCurrentLocation(coordsAddress);
-        setShowLocationModal(false);
-        
-        Alert.alert(
-          'Location Detected',
-          `Coordinates: ${coordsAddress}`,
-          [{ text: 'OK' }]
-        );
-      }
-      
-    } catch (error: any) {
-      console.error('❌ Location error:', error);
-      console.error('Error details:', error.message);
-      
-      Alert.alert(
-        'Location Error',
-        `Unable to detect your location: ${error.message}. Please try again or select from saved addresses.`,
-        [{ text: 'OK' }]
-      );
-      setCurrentLocation('Thamel, Kathmandu'); // Reset to default
-    }
-  };
-
-  // --- ALL RESTAURANTS DATA (for search) ---
-  const ALL_RESTAURANTS = [
-    { id: 'NPP Food Services', name: 'NPP Food Services', tags: 'Fast Food', location: 'Maharajgunj | Samakhushi', image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=600&h=400&fit=crop', rating: '4.2', price: 'Rs 655' },
-    { id: 'The Bakery Cafe', name: 'The Bakery Cafe', tags: 'Cafe, Bakery', location: 'Thamel, Kathmandu', image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600&h=400&fit=crop', rating: '4.6', price: 'Rs 800' },
-    { id: 'Himalayan Java Coffee', name: 'Himalayan Java Coffee', tags: 'Coffee, Pastries', location: 'Durbar Marg, Kathmandu', image: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=600&h=400&fit=crop', rating: '4.4', price: 'Rs 450' },
-    { id: 'Fire and Ice Pizzeria', name: 'Fire and Ice Pizzeria', tags: 'Italian, Pizza', location: 'Thamel, Kathmandu', image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&h=400&fit=crop', rating: '4.7', price: 'Rs 1200' },
-    { id: 'Dhokaima Cafe', name: 'Dhokaima Cafe', tags: 'Nepali, Traditional', location: 'Patan Dhoka, Lalitpur', image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&h=400&fit=crop', rating: '4.5', price: 'Rs 750' },
-    { id: 'Roadhouse Cafe', name: 'Roadhouse Cafe', tags: 'Continental, Bar', location: 'Thamel, Kathmandu', image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&h=400&fit=crop', rating: '4.3', price: 'Rs 950' },
-    { id: 'Bhojan Griha', name: 'Bhojan Griha', tags: 'Nepali, Cultural', location: 'Dillibazar, Kathmandu', image: 'https://images.unsplash.com/photo-1574484284002-952d92456975?w=600&h=400&fit=crop', rating: '4.6', price: 'Rs 850' },
-    { id: 'Momo Kathmandu', name: 'Momo Kathmandu', tags: 'Nepali, Momo', location: 'Thamel, Kathmandu', image: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=600&h=400&fit=crop', rating: '4.5', price: 'Rs 300' },
-    { id: 'Pizza Hub', name: 'Pizza Hub', tags: 'Italian, Pizza', location: 'New Baneshwor, Kathmandu', image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&h=400&fit=crop', rating: '4.2', price: 'Rs 600' },
-    { id: 'Burger House', name: 'Burger House', tags: 'Fast Food, Burgers', location: 'Lazimpat, Kathmandu', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&h=400&fit=crop', rating: '4.8', price: 'Rs 500' },
+  const STATIC_RESTAURANTS = [
+    { _id: '1', name: 'Bajeko Sekuwa', cuisine: 'Nepali • Grill • BBQ', address: 'Baneshwor, Kathmandu', image: 'https://images.unsplash.com/photo-1529042410759-befb1204b468?w=200&h=200&fit=crop' },
+    { _id: '2', name: 'Roadhouse Cafe', cuisine: 'Pizza • Pasta • Italian', address: 'Thamel, Kathmandu', image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&h=200&fit=crop' },
+    { _id: '3', name: 'Himalayan Java', cuisine: 'Coffee • Cafe • Snacks', address: 'Durbar Marg, Kathmandu', image: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=200&h=200&fit=crop' },
+    { _id: '4', name: 'Jimbu Thakali Kitchen', cuisine: 'Thakali • Dal Bhat • Nepali', address: 'New Baneshwor, Kathmandu', image: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=200&h=200&fit=crop' },
+    { _id: '5', name: 'Fire & Ice Pizzeria', cuisine: 'Pizza • Italian • Desserts', address: 'Tridevi Marg, Thamel', image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=200&h=200&fit=crop' },
+    { _id: '6', name: 'Momo Magic', cuisine: 'Momo • Nepali • Fast Food', address: 'Lazimpat, Kathmandu', image: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=200&h=200&fit=crop' },
+    { _id: '7', name: 'Momo Kathmandu', cuisine: 'Momo • Nepali • Dumplings', address: 'Thamel, Kathmandu', image: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=200&h=200&fit=crop' },
+    { _id: '8', name: 'Pizza Hub', cuisine: 'Pizza • Fast Food • Italian', address: 'New Road, Kathmandu', image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?w=200&h=200&fit=crop' },
+    { _id: '9', name: 'Burger House', cuisine: 'Burgers • Fast Food • Shakes', address: 'Lazimpat, Kathmandu', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=200&h=200&fit=crop' },
+    { _id: '10', name: 'Trisara', cuisine: 'Fine Dining • Nepali • Asian', address: 'Thamel, Kathmandu', image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=200&h=200&fit=crop' },
+    { _id: '11', name: 'Bhumi', cuisine: 'Nepali • Organic • Healthy', address: 'Patan, Lalitpur', image: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=200&h=200&fit=crop' },
+    { _id: '12', name: 'Bajeko', cuisine: 'Nepali • Grill • Sekuwa', address: 'Baneshwor, Kathmandu', image: 'https://images.unsplash.com/photo-1529042410759-befb1204b468?w=200&h=200&fit=crop' },
+    { _id: '13', name: 'Jimbu Thakali', cuisine: 'Thakali • Dal Bhat • Nepali', address: 'New Baneshwor, Kathmandu', image: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=200&h=200&fit=crop' },
+    { _id: '14', name: 'Roadhouse', cuisine: 'Pizza • Pasta • Italian', address: 'Thamel, Kathmandu', image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&h=200&fit=crop' },
+    { _id: '15', name: 'Dalle', cuisine: 'Nepali • Spicy • Local', address: 'Jhamsikhel, Lalitpur', image: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=200&h=200&fit=crop' },
+    { _id: '16', name: 'KFC', cuisine: 'Fried Chicken • Fast Food • Burgers', address: 'Durbar Marg, Kathmandu', image: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=200&h=200&fit=crop' },
+    { _id: '17', name: 'Fire & Ice', cuisine: 'Pizza • Italian • Gelato', address: 'Tridevi Marg, Thamel', image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=200&h=200&fit=crop' },
   ];
 
   const searchResults = searchQuery.trim().length > 0
-    ? ALL_RESTAURANTS.filter(r =>
-        r.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        r.tags.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        r.location.toLowerCase().includes(searchQuery.toLowerCase())
-      )
+    ? STATIC_RESTAURANTS.filter(r => {
+        const q = searchQuery.toLowerCase().trim();
+        // Short query (1-2 chars): only match restaurant name
+        if (q.length <= 2) {
+          return r.name.toLowerCase().startsWith(q);
+        }
+        // Longer query: match name, cuisine or address
+        return (
+          r.name.toLowerCase().includes(q) ||
+          r.cuisine.toLowerCase().includes(q) ||
+          r.address.toLowerCase().includes(q)
+        );
+      })
     : [];
 
   // --- AUTO-SCROLL LOGIC ---
@@ -352,7 +247,7 @@ export default function HomeScreen() {
               ) : (
                 searchResults.map((r, index) => (
                   <TouchableOpacity
-                    key={r.id}
+                    key={r._id}
                     style={[
                       styles.searchResultRow,
                       index < searchResults.length - 1 && styles.searchResultBorder
@@ -361,30 +256,39 @@ export default function HomeScreen() {
                       setSearchQuery('');
                       router.push({
                         pathname: '/restaurant/[id]',
-                        params: { id: r.id, image: r.image, location: r.location, rating: r.rating }
+                        params: {
+                          id: r.name,
+                          restaurantId: r._id,
+                          location: r.address,
+                          rating: '4.5',
+                          image: r.image,
+                        }
                       } as any);
                     }}
                     activeOpacity={0.7}
                   >
-                    {/* Thumbnail */}
                     <Image
                       source={{ uri: r.image }}
                       style={styles.searchResultThumb}
                     />
-                    {/* Info */}
                     <View style={styles.searchResultInfo}>
-                      <Text style={styles.searchResultName} numberOfLines={1}>{r.name}</Text>
-                      <Text style={styles.searchResultTags} numberOfLines={1}>{r.tags}</Text>
+                      <Text style={styles.searchResultName} numberOfLines={1}>
+                        {r.name}
+                      </Text>
+                      <Text style={styles.searchResultTags} numberOfLines={1}>
+                        {r.cuisine}
+                      </Text>
                       <View style={styles.searchResultBottom}>
                         <Ionicons name="location-outline" size={11} color={COLORS.textGray} />
-                        <Text style={styles.searchResultLocation} numberOfLines={1}>{r.location}</Text>
+                        <Text style={styles.searchResultLocation} numberOfLines={1}>
+                          {r.address}
+                        </Text>
                       </View>
                     </View>
-                    {/* Rating + Arrow */}
                     <View style={styles.searchResultRight}>
                       <View style={styles.ratingBadge}>
                         <Ionicons name="star" size={10} color="#FFD700" />
-                        <Text style={styles.ratingText}>{r.rating}</Text>
+                        <Text style={styles.ratingText}>4.5</Text>
                       </View>
                       <Ionicons name="chevron-forward" size={16} color="#CCC" style={{ marginTop: 6 }} />
                     </View>
@@ -475,20 +379,20 @@ export default function HomeScreen() {
                 imageUri="https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=200&h=200&fit=crop" 
                 onPress={() => router.push('/category/momo' as any)}
             />
-            <FoodCircleItem title="Biryani" imageUri="https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=200&h=200&fit=crop" />
-            <FoodCircleItem title="Sushi" imageUri="https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=200&h=200&fit=crop" />
-            <FoodCircleItem title="Fried Chicken" imageUri="https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=200&h=200&fit=crop" />
-            <FoodCircleItem title="Pasta" imageUri="https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=200&h=200&fit=crop" />
-            <FoodCircleItem title="Noodles" imageUri="https://images.unsplash.com/photo-1612929633738-8fe44f7ec841?w=200&h=200&fit=crop" />
-            <FoodCircleItem title="Dessert" imageUri="https://images.unsplash.com/photo-1551024506-0bccd828d307?w=200&h=200&fit=crop" />
-            <FoodCircleItem title="Coffee" imageUri="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=200&h=200&fit=crop" />
-            <FoodCircleItem title="Tacos" imageUri="https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=200&h=200&fit=crop" />
-            <FoodCircleItem title="Sandwich" imageUri="https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=200&h=200&fit=crop" />
-            <FoodCircleItem title="Ramen" imageUri="https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=200&h=200&fit=crop" />
-            <FoodCircleItem title="Salad" imageUri="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=200&h=200&fit=crop" />
-            <FoodCircleItem title="Smoothie" imageUri="https://images.unsplash.com/photo-1553530666-ba11a7da3888?w=200&h=200&fit=crop" />
-            <FoodCircleItem title="Donuts" imageUri="https://images.unsplash.com/photo-1551024506-0bccd828d307?w=200&h=200&fit=crop" />
-            <FoodCircleItem title="Wraps" imageUri="https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=200&h=200&fit=crop" />
+            <FoodCircleItem title="Biryani" imageUri="https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=200&h=200&fit=crop" onPress={() => router.push('/category/biryani' as any)} />
+            <FoodCircleItem title="Sushi" imageUri="https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=200&h=200&fit=crop" onPress={() => router.push('/category/sushi' as any)} />
+            <FoodCircleItem title="Fried Chicken" imageUri="https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=200&h=200&fit=crop" onPress={() => router.push('/category/fried-chicken' as any)} />
+            <FoodCircleItem title="Pasta" imageUri="https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=200&h=200&fit=crop" onPress={() => router.push('/category/pasta' as any)} />
+            <FoodCircleItem title="Noodles" imageUri="https://images.unsplash.com/photo-1612929633738-8fe44f7ec841?w=200&h=200&fit=crop" onPress={() => router.push('/category/noodles' as any)} />
+            <FoodCircleItem title="Dessert" imageUri="https://images.unsplash.com/photo-1551024506-0bccd828d307?w=200&h=200&fit=crop" onPress={() => router.push('/category/dessert' as any)} />
+            <FoodCircleItem title="Coffee" imageUri="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=200&h=200&fit=crop" onPress={() => router.push('/category/coffee' as any)} />
+            <FoodCircleItem title="Tacos" imageUri="https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=200&h=200&fit=crop" onPress={() => router.push('/category/tacos' as any)} />
+            <FoodCircleItem title="Sandwich" imageUri="https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=200&h=200&fit=crop" onPress={() => router.push('/category/sandwich' as any)} />
+            <FoodCircleItem title="Ramen" imageUri="https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=200&h=200&fit=crop" onPress={() => router.push('/category/noodles' as any)} />
+            <FoodCircleItem title="Salad" imageUri="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=200&h=200&fit=crop" onPress={() => router.push('/category/all' as any)} />
+            <FoodCircleItem title="Smoothie" imageUri="https://images.unsplash.com/photo-1553530666-ba11a7da3888?w=200&h=200&fit=crop" onPress={() => router.push('/category/coffee' as any)} />
+            <FoodCircleItem title="Donuts" imageUri="https://images.unsplash.com/photo-1551024506-0bccd828d307?w=200&h=200&fit=crop" onPress={() => router.push('/category/dessert' as any)} />
+            <FoodCircleItem title="Wraps" imageUri="https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=200&h=200&fit=crop" onPress={() => router.push('/category/sandwich' as any)} />
           </ScrollView>
         </View>
 
@@ -499,16 +403,19 @@ export default function HomeScreen() {
                 title="Momo Kathmandu"
                 imageUri="https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=300&h=400&fit=crop"
                 rating="4.5"
+                onPress={() => router.push({ pathname: '/restaurant/[id]', params: { id: 'Momo Kathmandu', location: 'Thamel, Kathmandu', rating: '4.5', image: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=800&h=400&fit=crop' } } as any)}
               />
               <FeaturedCard 
                 title="Pizza Hub"
                 imageUri="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=300&h=400&fit=crop"
                 rating="4.2"
+                onPress={() => router.push({ pathname: '/restaurant/[id]', params: { id: 'Pizza Hub', location: 'New Road, Kathmandu', rating: '4.2', image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800&h=400&fit=crop' } } as any)}
               />
                <FeaturedCard 
                 title="Burger House"
                 imageUri="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300&h=400&fit=crop"
                 rating="4.8"
+                onPress={() => router.push({ pathname: '/restaurant/[id]', params: { id: 'Burger House', location: 'Lazimpat, Kathmandu', rating: '4.8', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&h=400&fit=crop' } } as any)}
               />
            </ScrollView>
         </View>
@@ -522,15 +429,15 @@ export default function HomeScreen() {
           <Text style={styles.sectionSubtitle}>Long-standing icons of the culinary scene</Text>
           
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.horizontalList}>
-            <FoodCircleItem title="Trisara" imageUri="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=200&h=200&fit=crop" />
-            <FoodCircleItem title="Bhumi" imageUri="https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=200&h=200&fit=crop" />
-            <FoodCircleItem title="Bajeko" imageUri="https://images.unsplash.com/photo-1529042410759-befb1204b468?w=200&h=200&fit=crop" />
-            <FoodCircleItem title="Jimbu Thakali" imageUri="https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=200&h=200&fit=crop" />
-            <FoodCircleItem title="Roadhouse" imageUri="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&h=200&fit=crop" />
-            <FoodCircleItem title="Himalayan Java" imageUri="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=200&h=200&fit=crop" />
-            <FoodCircleItem title="Dalle" imageUri="https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=200&h=200&fit=crop" />
-            <FoodCircleItem title="KFC" imageUri="https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=200&h=200&fit=crop" />
-            <FoodCircleItem title="Fire & Ice" imageUri="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&h=200&fit=crop" />
+            <FoodCircleItem title="Trisara" imageUri="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=200&h=200&fit=crop" onPress={() => router.push({ pathname: '/restaurant/[id]', params: { id: 'Trisara', location: 'Thamel, Kathmandu', rating: '4.8', image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=400&fit=crop' } } as any)} />
+            <FoodCircleItem title="Bhumi" imageUri="https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=200&h=200&fit=crop" onPress={() => router.push({ pathname: '/restaurant/[id]', params: { id: 'Bhumi', location: 'Patan, Lalitpur', rating: '4.6', image: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=800&h=400&fit=crop' } } as any)} />
+            <FoodCircleItem title="Bajeko" imageUri="https://images.unsplash.com/photo-1529042410759-befb1204b468?w=200&h=200&fit=crop" onPress={() => router.push({ pathname: '/restaurant/[id]', params: { id: 'Bajeko', location: 'Baneshwor, Kathmandu', rating: '4.7', image: 'https://images.unsplash.com/photo-1529042410759-befb1204b468?w=800&h=400&fit=crop' } } as any)} />
+            <FoodCircleItem title="Jimbu Thakali" imageUri="https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=200&h=200&fit=crop" onPress={() => router.push({ pathname: '/restaurant/[id]', params: { id: 'Jimbu Thakali', location: 'New Baneshwor, Kathmandu', rating: '4.5', image: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=800&h=400&fit=crop' } } as any)} />
+            <FoodCircleItem title="Roadhouse" imageUri="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&h=200&fit=crop" onPress={() => router.push({ pathname: '/restaurant/[id]', params: { id: 'Roadhouse', location: 'Thamel, Kathmandu', rating: '4.4', image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800&h=400&fit=crop' } } as any)} />
+            <FoodCircleItem title="Himalayan Java" imageUri="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=200&h=200&fit=crop" onPress={() => router.push({ pathname: '/restaurant/[id]', params: { id: 'Himalayan Java', location: 'Durbar Marg, Kathmandu', rating: '4.5', image: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=800&h=400&fit=crop' } } as any)} />
+            <FoodCircleItem title="Dalle" imageUri="https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=200&h=200&fit=crop" onPress={() => router.push({ pathname: '/restaurant/[id]', params: { id: 'Dalle', location: 'Jhamsikhel, Lalitpur', rating: '4.6', image: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=800&h=400&fit=crop' } } as any)} />
+            <FoodCircleItem title="KFC" imageUri="https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=200&h=200&fit=crop" onPress={() => router.push({ pathname: '/restaurant/[id]', params: { id: 'KFC', location: 'Durbar Marg, Kathmandu', rating: '4.3', image: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=800&h=400&fit=crop' } } as any)} />
+            <FoodCircleItem title="Fire & Ice" imageUri="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&h=200&fit=crop" onPress={() => router.push({ pathname: '/restaurant/[id]', params: { id: 'Fire & Ice', location: 'Tridevi Marg, Thamel', rating: '4.7', image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&h=400&fit=crop' } } as any)} />
           </ScrollView>
         </View>
 
@@ -538,166 +445,54 @@ export default function HomeScreen() {
         <View style={[styles.sectionContainer, { marginBottom: 80 }]}> 
           <Text style={styles.sectionTitle}>The Usuals You'll Love</Text>
           <Text style={styles.sectionSubtitle}>If it's not already your favourite, it's about to be</Text>
-          
-          <VerticalRestaurantCard 
-            name="NPP Food Services"
-            tags="Fast Food"
-            location="Maharajgunj | Samakhushi"
-            imageUri="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=600&h=400&fit=crop"
-            price="Rs 655"
-            onPress={() => router.push({
-              pathname: '/restaurant/[id]',
-              params: { 
-                id: 'NPP Food Services',
-                image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=600&h=400&fit=crop',
-                location: 'Maharajgunj | Samakhushi',
-                rating: '4.2'
-              }
-            } as any)}
+
+          <VerticalRestaurantCard
+            name="Bajeko Sekuwa"
+            tags="Nepali • Grill • BBQ"
+            location="Baneshwor, Kathmandu"
+            imageUri="https://images.unsplash.com/photo-1529042410759-befb1204b468?w=600&h=400&fit=crop"
+            price="Rs. 350+"
+            onPress={() => router.push({ pathname: '/restaurant/[id]', params: { id: 'Bajeko Sekuwa', location: 'Baneshwor, Kathmandu', rating: '4.7', image: 'https://images.unsplash.com/photo-1529042410759-befb1204b468?w=800&h=400&fit=crop' } } as any)}
           />
-           <VerticalRestaurantCard 
-            name="The Bakery Cafe"
-            tags="Cafe, Bakery"
-            location="Thamel, Kathmandu"
-            imageUri="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600&h=400&fit=crop"
-            price="Rs 800"
-            onPress={() => router.push({
-              pathname: '/restaurant/[id]',
-              params: { 
-                id: 'The Bakery Cafe',
-                image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600&h=400&fit=crop',
-                location: 'Thamel, Kathmandu',
-                rating: '4.6'
-              }
-            } as any)}
-          />
-          <VerticalRestaurantCard 
-            name="Himalayan Java Coffee"
-            tags="Coffee, Pastries"
-            location="Durbar Marg, Kathmandu"
-            imageUri="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=600&h=400&fit=crop"
-            price="Rs 450"
-            onPress={() => router.push({
-              pathname: '/restaurant/[id]',
-              params: { 
-                id: 'Himalayan Java Coffee',
-                image: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=600&h=400&fit=crop',
-                location: 'Durbar Marg, Kathmandu',
-                rating: '4.4'
-              }
-            } as any)}
-          />
-          <VerticalRestaurantCard 
-            name="Fire and Ice Pizzeria"
-            tags="Italian, Pizza"
+          <VerticalRestaurantCard
+            name="Roadhouse Cafe"
+            tags="Pizza • Pasta • Italian"
             location="Thamel, Kathmandu"
             imageUri="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&h=400&fit=crop"
-            price="Rs 1200"
-            onPress={() => router.push({
-              pathname: '/restaurant/[id]',
-              params: { 
-                id: 'Fire and Ice Pizzeria',
-                image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&h=400&fit=crop',
-                location: 'Thamel, Kathmandu',
-                rating: '4.7'
-              }
-            } as any)}
+            price="Rs. 500+"
+            onPress={() => router.push({ pathname: '/restaurant/[id]', params: { id: 'Roadhouse Cafe', location: 'Thamel, Kathmandu', rating: '4.4', image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800&h=400&fit=crop' } } as any)}
           />
-          <VerticalRestaurantCard 
-            name="Dhokaima Cafe"
-            tags="Nepali, Traditional"
-            location="Patan Dhoka, Lalitpur"
-            imageUri="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&h=400&fit=crop"
-            price="Rs 750"
-            onPress={() => router.push({
-              pathname: '/restaurant/[id]',
-              params: { 
-                id: 'Dhokaima Cafe',
-                image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&h=400&fit=crop',
-                location: 'Patan Dhoka, Lalitpur',
-                rating: '4.5'
-              }
-            } as any)}
+          <VerticalRestaurantCard
+            name="Himalayan Java"
+            tags="Coffee • Cafe • Snacks"
+            location="Durbar Marg, Kathmandu"
+            imageUri="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600&h=400&fit=crop"
+            price="Rs. 250+"
+            onPress={() => router.push({ pathname: '/restaurant/[id]', params: { id: 'Himalayan Java', location: 'Durbar Marg, Kathmandu', rating: '4.5', image: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=800&h=400&fit=crop' } } as any)}
           />
-          <VerticalRestaurantCard 
-            name="Roadhouse Cafe"
-            tags="Continental, Bar"
-            location="Thamel, Kathmandu"
-            imageUri="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&h=400&fit=crop"
-            price="Rs 950"
-            onPress={() => router.push({
-              pathname: '/restaurant/[id]',
-              params: { 
-                id: 'Roadhouse Cafe',
-                image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&h=400&fit=crop',
-                location: 'Thamel, Kathmandu',
-                rating: '4.3'
-              }
-            } as any)}
-          />
-          <VerticalRestaurantCard 
-            name="Bhojan Griha"
-            tags="Nepali, Cultural"
-            location="Dillibazar, Kathmandu"
-            imageUri="https://images.unsplash.com/photo-1574484284002-952d92456975?w=600&h=400&fit=crop"
-            price="Rs 1800"
-            onPress={() => router.push({
-              pathname: '/restaurant/[id]',
-              params: { 
-                id: 'Bhojan Griha',
-                image: 'https://images.unsplash.com/photo-1574484284002-952d92456975?w=600&h=400&fit=crop',
-                location: 'Dillibazar, Kathmandu',
-                rating: '4.8'
-              }
-            } as any)}
-          />
-          <VerticalRestaurantCard 
-            name="Garden of Dreams Cafe"
-            tags="Cafe, Garden Dining"
-            location="Thamel, Kathmandu"
-            imageUri="https://images.unsplash.com/photo-1559329007-40df8a9345d8?w=600&h=400&fit=crop"
-            price="Rs 650"
-            onPress={() => router.push({
-              pathname: '/restaurant/[id]',
-              params: { 
-                id: 'Garden of Dreams Cafe',
-                image: 'https://images.unsplash.com/photo-1559329007-40df8a9345d8?w=600&h=400&fit=crop',
-                location: 'Thamel, Kathmandu',
-                rating: '4.4'
-              }
-            } as any)}
-          />
-          <VerticalRestaurantCard 
-            name="Momo Station"
-            tags="Momo, Tibetan"
+          <VerticalRestaurantCard
+            name="Jimbu Thakali Kitchen"
+            tags="Thakali • Dal Bhat • Nepali"
             location="New Baneshwor, Kathmandu"
-            imageUri="https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=600&h=400&fit=crop"
-            price="Rs 350"
-            onPress={() => router.push({
-              pathname: '/restaurant/[id]',
-              params: { 
-                id: 'Momo Station',
-                image: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=600&h=400&fit=crop',
-                location: 'New Baneshwor, Kathmandu',
-                rating: '4.1'
-              }
-            } as any)}
+            imageUri="https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=600&h=400&fit=crop"
+            price="Rs. 400+"
+            onPress={() => router.push({ pathname: '/restaurant/[id]', params: { id: 'Jimbu Thakali Kitchen', location: 'New Baneshwor, Kathmandu', rating: '4.5', image: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=800&h=400&fit=crop' } } as any)}
           />
-          <VerticalRestaurantCard 
-            name="Bluebird Mall Food Court"
-            tags="Multi-cuisine, Fast Food"
-            location="Tripureshwor, Kathmandu"
-            imageUri="https://images.unsplash.com/photo-1567521464027-f127ff144326?w=600&h=400&fit=crop"
-            price="Rs 500"
-            onPress={() => router.push({
-              pathname: '/restaurant/[id]',
-              params: { 
-                id: 'Bluebird Mall Food Court',
-                image: 'https://images.unsplash.com/photo-1567521464027-f127ff144326?w=600&h=400&fit=crop',
-                location: 'Tripureshwor, Kathmandu',
-                rating: '3.9'
-              }
-            } as any)}
+          <VerticalRestaurantCard
+            name="Fire & Ice Pizzeria"
+            tags="Pizza • Italian • Desserts"
+            location="Tridevi Marg, Thamel"
+            imageUri="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&h=400&fit=crop"
+            price="Rs. 600+"
+            onPress={() => router.push({ pathname: '/restaurant/[id]', params: { id: 'Fire & Ice Pizzeria', location: 'Tridevi Marg, Thamel', rating: '4.7', image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&h=400&fit=crop' } } as any)}
+          />
+          <VerticalRestaurantCard
+            name="Momo Magic"
+            tags="Momo • Nepali • Fast Food"
+            location="Lazimpat, Kathmandu"
+            imageUri="https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=600&h=400&fit=crop"
+            price="Rs. 150+"
+            onPress={() => router.push({ pathname: '/restaurant/[id]', params: { id: 'Momo Magic', location: 'Lazimpat, Kathmandu', rating: '4.3', image: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=800&h=400&fit=crop' } } as any)}
           />
         </View>
 
@@ -718,28 +513,6 @@ export default function HomeScreen() {
               <TouchableOpacity onPress={() => setShowLocationModal(false)}>
                 <Ionicons name="close" size={24} color={COLORS.textDark} />
               </TouchableOpacity>
-            </View>
-
-            {/* Use Current Location */}
-            <TouchableOpacity 
-              style={styles.currentLocationButton}
-              onPress={handleUseCurrentLocation}
-            >
-              <View style={styles.locationIconContainer}>
-                <Ionicons name="navigate" size={20} color={COLORS.primaryOrange} />
-              </View>
-              <View style={styles.locationInfo}>
-                <Text style={styles.locationTitle}>Use Current Location</Text>
-                <Text style={styles.locationSubtitle}>Enable GPS to detect location</Text>
-              </View>
-              <Ionicons name="chevron-forward" size={20} color={COLORS.textGray} />
-            </TouchableOpacity>
-
-            {/* Divider */}
-            <View style={styles.divider}>
-              <View style={styles.dividerLine} />
-              <Text style={styles.dividerText}>OR</Text>
-              <View style={styles.dividerLine} />
             </View>
 
             {/* Saved Addresses */}
@@ -801,8 +574,13 @@ export default function HomeScreen() {
         animationType="slide"
         onRequestClose={() => setShowAddAddressModal(false)}
       >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
             {/* Modal Header */}
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>
@@ -915,6 +693,7 @@ export default function HomeScreen() {
             </ScrollView>
           </View>
         </View>
+        </KeyboardAvoidingView>
       </Modal>
 
       {/* --- 7. BOTTOM NAVIGATION BAR --- */}
@@ -963,9 +742,10 @@ interface FeaturedCardProps {
   title: string;
   imageUri: string;
   rating: string;
+  onPress?: () => void;
 }
-const FeaturedCard = ({ title, imageUri, rating }: FeaturedCardProps) => (
-    <TouchableOpacity style={styles.featuredCard}>
+const FeaturedCard = ({ title, imageUri, rating, onPress }: FeaturedCardProps) => (
+    <TouchableOpacity style={styles.featuredCard} onPress={onPress}>
         <Image source={{ uri: imageUri }} style={styles.featuredImage} />
         <View style={styles.featuredOverlay}>
             <Text style={styles.featuredTitle}>{title}</Text>
@@ -1250,16 +1030,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: COLORS.textDark,
   },
-  currentLocationButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-    backgroundColor: COLORS.backgroundCream,
-    marginHorizontal: 20,
-    borderRadius: 12,
-    marginBottom: 20,
-  },
   locationIconContainer: {
     width: 40,
     height: 40,
@@ -1281,23 +1051,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: COLORS.textGray,
     marginTop: 2,
-  },
-  divider: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    marginBottom: 20,
-  },
-  dividerLine: {
-    flex: 1,
-    height: 1,
-    backgroundColor: COLORS.lightGray,
-  },
-  dividerText: {
-    marginHorizontal: 10,
-    fontSize: 12,
-    color: COLORS.textGray,
-    fontWeight: '600',
   },
   savedAddressesTitle: {
     fontSize: 16,

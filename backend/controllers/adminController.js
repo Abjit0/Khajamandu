@@ -85,7 +85,7 @@ exports.approveUser = async (req, res) => {
   }
 };
 
-// Reject user
+// Reject user (pending approvals)
 exports.rejectUser = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -110,6 +110,52 @@ exports.rejectUser = async (req, res) => {
     res.status(500).json({
       status: 'FAILED',
       message: 'Failed to reject user'
+    });
+  }
+};
+
+// Delete user entirely (admin action on All Users)
+exports.deleteUser = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        status: 'FAILED',
+        message: 'User not found'
+      });
+    }
+
+    // Prevent deleting admin accounts
+    if (user.role === 'admin') {
+      return res.status(403).json({
+        status: 'FAILED',
+        message: 'Cannot delete admin accounts'
+      });
+    }
+
+    // Delete user and all their associated orders
+    await User.findByIdAndDelete(userId);
+    await Order.deleteMany({
+      $or: [
+        { userId: userId },
+        { userEmail: user.email }
+      ]
+    });
+
+    console.log(`🗑️ User fully deleted: ${user.email} (${user.role})`);
+
+    res.status(200).json({
+      status: 'SUCCESS',
+      message: `User and all associated data deleted successfully`
+    });
+  } catch (error) {
+    console.error('Delete user error:', error);
+    res.status(500).json({
+      status: 'FAILED',
+      message: 'Failed to delete user'
     });
   }
 };

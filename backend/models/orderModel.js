@@ -79,6 +79,14 @@ orderSchema.methods.updateStatus = function(newStatus) {
       break;
     case 'DELIVERED':
       this.deliveredAt = new Date();
+      if (this.paymentMethod === 'COD') {
+        this.paymentStatus = 'PAID';
+      }
+      break;
+    case 'CANCELLED':
+      if (this.paymentStatus === 'PENDING') {
+        this.paymentStatus = 'FAILED';
+      }
       break;
   }
   

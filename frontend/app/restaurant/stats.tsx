@@ -113,7 +113,7 @@ export default function RestaurantStats() {
   );
 
   return (
-    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+    <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Statistics</Text>
         <Ionicons name="stats-chart" size={24} color={COLORS.dark} />

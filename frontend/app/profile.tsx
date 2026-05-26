@@ -29,6 +29,10 @@ export default function ProfileScreen() {
   const [transactions, setTransactions] = useState<any[]>([]);
   const [editName, setEditName] = useState('');
   const [editPhone, setEditPhone] = useState('');
+  const [editRestaurantName, setEditRestaurantName] = useState('');
+  const [editCuisine, setEditCuisine] = useState('');
+  const [editRestaurantAddress, setEditRestaurantAddress] = useState('');
+  const [editRestaurantPhone, setEditRestaurantPhone] = useState('');
   const [showEditModal, setShowEditModal] = useState(false);
   const [showHelpModal, setShowHelpModal] = useState(false);
   const [showAboutModal, setShowAboutModal] = useState(false);
@@ -114,22 +118,61 @@ export default function ProfileScreen() {
   const handleEditProfile = () => {
     setEditName(userData?.profile?.name || '');
     setEditPhone(userData?.profile?.phone || '');
+    if (userData?.role === 'restaurant') {
+      setEditRestaurantName(userData?.profile?.restaurantName || '');
+      setEditCuisine(userData?.profile?.cuisine || '');
+      setEditRestaurantAddress(userData?.profile?.restaurantAddress || '');
+      setEditRestaurantPhone(userData?.profile?.restaurantPhone || '');
+    }
     setShowEditModal(true);
   };
 
   const handleSaveProfile = async () => {
-    if (!editName.trim()) {
-      Alert.alert('Error', 'Name cannot be empty');
-      return;
+    // Validation based on role
+    if (userData?.role === 'restaurant') {
+      if (!editRestaurantName.trim()) {
+        Alert.alert('Error', 'Restaurant name cannot be empty');
+        return;
+      }
+    } else {
+      if (!editName.trim()) {
+        Alert.alert('Error', 'Name cannot be empty');
+        return;
+      }
     }
+    
     try {
-      const response = await client.post('/user/update-profile', {
+      const payload: any = {
         userId: userData?.id,
-        name: editName.trim(),
-        phone: editPhone.trim(),
-      });
+      };
+      
+      // Add restaurant-specific fields if user is a restaurant
+      if (userData?.role === 'restaurant') {
+        payload.restaurantName = editRestaurantName.trim();
+        payload.cuisine = editCuisine.trim();
+        payload.restaurantAddress = editRestaurantAddress.trim();
+        payload.restaurantPhone = editRestaurantPhone.trim();
+      } else {
+        payload.name = editName.trim();
+        payload.phone = editPhone.trim();
+      }
+      
+      const response = await client.post('/user/update-profile', payload);
+      
       if (response.data.status === 'SUCCESS') {
-        const updated = { ...userData, profile: { ...userData.profile, name: editName.trim(), phone: editPhone.trim() } };
+        const updatedProfile = { ...userData.profile };
+        
+        if (userData?.role === 'restaurant') {
+          updatedProfile.restaurantName = editRestaurantName.trim();
+          updatedProfile.cuisine = editCuisine.trim();
+          updatedProfile.restaurantAddress = editRestaurantAddress.trim();
+          updatedProfile.restaurantPhone = editRestaurantPhone.trim();
+        } else {
+          updatedProfile.name = editName.trim();
+          updatedProfile.phone = editPhone.trim();
+        }
+        
+        const updated = { ...userData, profile: updatedProfile };
         setUserData(updated);
         await authAPI.storeAuthData(
           (await authAPI.getAuthData()).token,
@@ -139,6 +182,7 @@ export default function ProfileScreen() {
         Alert.alert('Success', 'Profile updated!');
       }
     } catch (e) {
+      console.error('Profile update error:', e);
       Alert.alert('Error', 'Failed to update profile');
     }
   };
@@ -392,14 +436,14 @@ export default function ProfileScreen() {
 
   if (loading && !userData) {
     return (
-      <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+      <SafeAreaView style={styles.container} edges={['top']}>
         <ActivityIndicator size="large" color={COLORS.primary} style={styles.centerLoader} />
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+    <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Profile</Text>
         <View style={{ width: 24 }} />
@@ -446,19 +490,53 @@ export default function ProfileScreen() {
         <View style={styles.modalOverlay}>
           <View style={styles.modalBox}>
             <Text style={styles.modalTitle}>Edit Profile</Text>
-            <TextInput
-              style={styles.modalInput}
-              placeholder="Full Name"
-              value={editName}
-              onChangeText={setEditName}
-            />
-            <TextInput
-              style={styles.modalInput}
-              placeholder="Phone Number"
-              value={editPhone}
-              onChangeText={setEditPhone}
-              keyboardType="phone-pad"
-            />
+            <ScrollView style={{ maxHeight: 400 }}>
+              {userData?.role === 'restaurant' ? (
+                <>
+                  <TextInput
+                    style={styles.modalInput}
+                    placeholder="Restaurant Name"
+                    value={editRestaurantName}
+                    onChangeText={setEditRestaurantName}
+                  />
+                  <TextInput
+                    style={styles.modalInput}
+                    placeholder="Cuisine Type (e.g., Nepali, Chinese)"
+                    value={editCuisine}
+                    onChangeText={setEditCuisine}
+                  />
+                  <TextInput
+                    style={styles.modalInput}
+                    placeholder="Restaurant Address"
+                    value={editRestaurantAddress}
+                    onChangeText={setEditRestaurantAddress}
+                  />
+                  <TextInput
+                    style={styles.modalInput}
+                    placeholder="Restaurant Phone"
+                    value={editRestaurantPhone}
+                    onChangeText={setEditRestaurantPhone}
+                    keyboardType="phone-pad"
+                  />
+                </>
+              ) : (
+                <>
+                  <TextInput
+                    style={styles.modalInput}
+                    placeholder="Full Name"
+                    value={editName}
+                    onChangeText={setEditName}
+                  />
+                  <TextInput
+                    style={styles.modalInput}
+                    placeholder="Phone Number"
+                    value={editPhone}
+                    onChangeText={setEditPhone}
+                    keyboardType="phone-pad"
+                  />
+                </>
+              )}
+            </ScrollView>
             <View style={styles.modalActions}>
               <TouchableOpacity style={[styles.modalBtn, { backgroundColor: COLORS.gray }]} onPress={() => setShowEditModal(false)}>
                 <Text style={styles.modalBtnText}>Cancel</Text>

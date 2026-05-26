@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter, usePathname } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { client, authAPI } from '../api/client';
 
 const COLORS = {
@@ -15,6 +16,7 @@ const COLORS = {
 export default function RestaurantBottomNavBar() {
   const router = useRouter();
   const pathname = usePathname();
+  const insets = useSafeAreaInsets();
   const [newOrdersCount, setNewOrdersCount] = useState(0);
 
   useEffect(() => {
@@ -49,40 +51,41 @@ export default function RestaurantBottomNavBar() {
   };
 
   return (
-    <View style={styles.container}>
-      {tabs.map((tab) => (
-        <TouchableOpacity
-          key={tab.name}
-          style={styles.tab}
-          onPress={() => router.push(tab.route as any)}
-        >
-          <View style={styles.iconContainer}>
-            <Ionicons
-              name={tab.icon as any}
-              size={24}
-              color={isActive(tab.route) ? COLORS.primary : COLORS.gray}
-            />
-            {tab.badge !== undefined && tab.badge > 0 && (
-              <View style={styles.badge}>
-                <Text style={styles.badgeText}>{tab.badge > 9 ? '9+' : tab.badge}</Text>
-              </View>
-            )}
-          </View>
-          <Text style={[styles.label, isActive(tab.route) && styles.activeLabel]}>
-            {tab.name}
-          </Text>
-        </TouchableOpacity>
-      ))}
+    <View style={styles.wrapper}>
+      <View style={styles.container}>
+        {tabs.map((tab) => (
+          <TouchableOpacity
+            key={tab.name}
+            style={styles.tab}
+            onPress={() => router.push(tab.route as any)}
+          >
+            <View style={styles.iconContainer}>
+              <Ionicons
+                name={tab.icon as any}
+                size={24}
+                color={isActive(tab.route) ? COLORS.primary : COLORS.gray}
+              />
+              {tab.badge !== undefined && tab.badge > 0 && (
+                <View style={styles.badge}>
+                  <Text style={styles.badgeText}>{tab.badge > 9 ? '9+' : tab.badge}</Text>
+                </View>
+              )}
+            </View>
+            <Text style={[styles.label, isActive(tab.route) && styles.activeLabel]}>
+              {tab.name}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+      {/* Safe area filler - white background to cover the gap */}
+      <View style={{ height: insets.bottom, backgroundColor: COLORS.white }} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
+  wrapper: {
     backgroundColor: COLORS.white,
-    paddingTop: 8,
-    paddingBottom: 8,
     borderTopWidth: 1,
     borderTopColor: '#E0E0E0',
     elevation: 8,
@@ -90,7 +93,14 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: -2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
+    justifyContent: 'flex-start',
+  },
+  container: {
+    flexDirection: 'row',
+    backgroundColor: COLORS.white,
+    paddingVertical: 10,
     justifyContent: 'space-around',
+    alignItems: 'center',
   },
   tab: {
     alignItems: 'center',

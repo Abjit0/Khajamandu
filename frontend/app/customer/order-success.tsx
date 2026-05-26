@@ -66,7 +66,10 @@ export default function OrderSuccessEnhanced() {
           {orderId && (
             <TouchableOpacity 
               style={[styles.button, styles.primaryButton]}
-              onPress={() => router.push(`/customer/order-tracking?orderId=${orderId}` as any)}
+              onPress={() => router.push({
+                pathname: '/customer/order-tracking',
+                params: { orderId }
+              } as any)}
             >
               <Ionicons name="location-outline" size={20} color={COLORS.white} />
               <Text style={styles.primaryButtonText}>Track Order</Text>

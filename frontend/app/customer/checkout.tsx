@@ -29,6 +29,8 @@ export default function CheckoutScreen() {
   // Pre-order state
   const isPreOrder = params.isPreOrder === 'true';
   const scheduledTime = params.scheduledTime as string | undefined;
+  const orderType = (params.orderType as string) || 'delivery';
+  const isDineIn = isPreOrder && orderType === 'dine-in';
 
   useEffect(() => {
     checkAuthentication();
@@ -75,7 +77,7 @@ export default function CheckoutScreen() {
       return;
     }
 
-    if (!deliveryAddress.trim()) {
+    if (!isDineIn && !deliveryAddress.trim()) {
       Alert.alert('Address Required', 'Please enter your delivery address.');
       return;
     }
@@ -103,7 +105,8 @@ export default function CheckoutScreen() {
     const orderData: any = {
       items: processedItems,
       totalAmount: Number(total),
-      deliveryAddress: deliveryAddress.trim(),
+      deliveryAddress: isDineIn ? 'Dine-in at restaurant' : deliveryAddress.trim(),
+      orderType: orderType,
       restaurantId: restaurantId,
       restaurantName: restaurantInfo,
       paymentMethod: paymentMethod,
@@ -209,18 +212,27 @@ export default function CheckoutScreen() {
           ))}
         </View>
 
-        {/* Delivery Address */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Delivery Address</Text>
-          <TextInput
-            style={styles.addressInput}
-            placeholder="Enter your delivery address"
-            value={deliveryAddress}
-            onChangeText={setDeliveryAddress}
-            multiline
-            numberOfLines={2}
-          />
-        </View>
+        {/* Delivery Address - hidden for dine-in */}
+        {isDineIn ? (
+          <View style={styles.section}>
+            <View style={styles.dineInBanner}>
+              <Ionicons name="restaurant" size={20} color={COLORS.primary} />
+              <Text style={styles.dineInText}>Dine-in — no delivery address needed. Enjoy your meal at the restaurant!</Text>
+            </View>
+          </View>
+        ) : (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Delivery Address</Text>
+            <TextInput
+              style={styles.addressInput}
+              placeholder="Enter your delivery address"
+              value={deliveryAddress}
+              onChangeText={setDeliveryAddress}
+              multiline
+              numberOfLines={2}
+            />
+          </View>
+        )}
 
         {/* Payment Method */}
         <View style={styles.section}>
@@ -350,6 +362,22 @@ const styles = StyleSheet.create({
     borderColor: COLORS.gray + '40',
     textAlignVertical: 'top',
     elevation: 1,
+  },
+  dineInBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    backgroundColor: '#FFF0E6',
+    padding: 14,
+    borderRadius: 12,
+    borderLeftWidth: 4,
+    borderLeftColor: COLORS.primary,
+  },
+  dineInText: {
+    flex: 1,
+    fontSize: 13,
+    color: COLORS.dark,
+    lineHeight: 18,
   },
   
   paymentOption: { 

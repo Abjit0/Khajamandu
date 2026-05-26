@@ -21,9 +21,9 @@ const { generalLimiter } = require('./middleware/rateLimiter');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Security Middleware - Relaxed for development
-// app.use(helmet()); // Temporarily disabled
-// app.use(generalLimiter); // Temporarily disabled
+// Security Middleware
+app.use(helmet());
+app.use(generalLimiter);
 app.use(cors({
     origin: true, // Allow all origins for development
     credentials: true,
@@ -44,15 +44,12 @@ app.use('/api/otp', otpRoutes);
 
 // 2. Order Routes - Enhanced with status management
 app.post('/api/orders/create', validateOrderInput, orderController.createOrder);
-app.get('/api/orders/all', orderController.getAllOrders); // Removed auth for testing
-app.post('/api/orders/update-status', orderController.updateOrderStatus); // Removed auth for testing
+app.get('/api/orders/all', authenticateToken, requireRestaurant, orderController.getAllOrders);
+app.post('/api/orders/update-status', orderController.updateOrderStatus);
 app.get('/api/orders/user/:userId', authenticateToken, orderController.getUserOrders);
 app.get('/api/orders/:orderId', orderController.getOrderById);
 app.post('/api/orders/payment-status', orderController.updatePaymentStatus);
 app.get('/api/transactions/:userId', authenticateToken, orderController.getTransactionHistory);
-
-// Test route for creating orders with logged-in user
-app.post('/api/orders/create-test', authenticateToken, orderController.createTestOrder);
 
 // Pre-order routes
 app.get('/api/orders/preorders/list', orderController.getPreOrders);
@@ -77,6 +74,7 @@ app.get('/api/admin/users', authenticateToken, requireAdmin, adminController.get
 app.get('/api/admin/pending', authenticateToken, requireAdmin, adminController.getPendingUsers);
 app.post('/api/admin/approve/:userId', authenticateToken, requireAdmin, adminController.approveUser);
 app.delete('/api/admin/reject/:userId', authenticateToken, requireAdmin, adminController.rejectUser);
+app.delete('/api/admin/delete/:userId', authenticateToken, requireAdmin, adminController.deleteUser);
 app.get('/api/admin/orders', authenticateToken, requireAdmin, adminController.getRecentOrders);
 
 // 6. Rider Routes - Rider functionality
@@ -102,51 +100,6 @@ app.get('/', (req, res) => {
         message: "Khajamandu Server is Running...",
         version: "2.0.0",
         timestamp: new Date().toISOString()
-    });
-});
-
-// Simple test endpoint for mobile debugging
-app.get('/api/test', (req, res) => {
-    console.log('📱 Mobile test endpoint hit from IP:', req.ip);
-    res.json({
-        status: 'SUCCESS',
-        message: 'Mobile connection test successful!',
-        timestamp: new Date().toISOString(),
-        ip: req.ip,
-        headers: req.headers
-    });
-});
-
-// Also keep the original test endpoint for direct access
-app.get('/test', (req, res) => {
-    console.log('📱 Direct test endpoint hit from IP:', req.ip);
-    res.json({
-        status: 'SUCCESS',
-        message: 'Direct connection test successful!',
-        timestamp: new Date().toISOString(),
-        ip: req.ip,
-        headers: req.headers
-    });
-});
-
-// Simple test endpoint for order debugging
-app.post('/api/test-order', (req, res) => {
-    console.log('🧪 Test order endpoint hit');
-    console.log('📦 Test order data:', JSON.stringify(req.body, null, 2));
-    res.json({
-        status: 'SUCCESS',
-        message: 'Test order endpoint working!',
-        receivedData: req.body
-    });
-});
-
-// Simple login test endpoint
-app.post('/api/test-login', (req, res) => {
-    console.log('📥 Test login request received:', req.body);
-    res.json({
-        status: 'SUCCESS',
-        message: 'Test login endpoint working!',
-        data: { test: true }
     });
 });
 

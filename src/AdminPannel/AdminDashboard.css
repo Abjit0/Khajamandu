@@ -345,6 +345,22 @@ body {
   opacity: 0.8;
 }
 
+.delete-btn {
+  background: #f44336;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 5px;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: opacity 0.3s;
+}
+
+.delete-btn:hover {
+  opacity: 0.8;
+}
+
 .empty-state {
   text-align: center;
   padding: 50px;
