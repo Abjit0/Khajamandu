@@ -4,12 +4,16 @@ import { Platform } from 'react-native';
 
 // Simple, reliable API URL configuration
 const getApiUrl = () => {
-    if (Platform.OS === 'web') {
-        return 'http://localhost:5000/api';
-    }
+    // PRODUCTION: Using live Render backend
+    const RENDER_URL = 'https://khajamandu-backend.onrender.com/api';
     
-    // For mobile - Use current Wi-Fi IP
-    return 'http://192.168.101.4:5000/api';
+    // DEVELOPMENT: Uncomment these lines for local testing
+    // if (Platform.OS === 'web') {
+    //     return 'http://localhost:5000/api';
+    // }
+    // return 'http://192.168.101.4:5000/api';
+    
+    return RENDER_URL;
 };
 
 const API_URL = getApiUrl();
