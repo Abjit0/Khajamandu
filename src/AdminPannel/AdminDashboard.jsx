@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './AdminDashboard.css';
 
-const API_URL = 'https://khajamandu-backend.onrender.com/api';
+const API_URL = 'https://khajamandu.onrender.com/api';
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState(null);

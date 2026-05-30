@@ -5,7 +5,7 @@ import { Platform } from 'react-native';
 // Simple, reliable API URL configuration
 const getApiUrl = () => {
     // PRODUCTION: Using live Render backend
-    return 'https://khajamandu-backend.onrender.com/api';
+    return 'https://khajamandu.onrender.com/api';
 
     // LOCAL DEVELOPMENT - uncomment when running backend locally
     // if (Platform.OS === 'web') {
