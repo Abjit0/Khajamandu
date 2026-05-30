@@ -42,9 +42,6 @@ export default function RootLayout() {
           {/* Rider Screens */}
           <Stack.Screen name="rider/dashboard" />
           
-          {/* Admin Screens */}
-          <Stack.Screen name="admin/dashboard" />
-          
           {/* Category Screens */}
           <Stack.Screen name="category/[id]" />
         </Stack>

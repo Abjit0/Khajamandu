@@ -86,8 +86,12 @@ export default function LoginScreen() {
           console.log('🍽️ Redirecting to Restaurant Dashboard');
           router.replace('/restaurant/dashboard' as any);
         } else if (userRole === 'admin') {
-          console.log('👨‍💼 Redirecting to Admin Panel');
-          router.replace('/admin/dashboard' as any);
+          console.log('👨‍💼 Admin detected - use web panel');
+          Alert.alert(
+            "Admin Access",
+            "Please use the Admin Web Panel to manage the system.\n\nURL: https://khajamandu.netlify.app",
+            [{ text: "OK" }]
+          );
         } else if (userRole === 'rider') {
           console.log('🚴 Redirecting to Rider Dashboard');
           router.replace('/rider/dashboard' as any);
