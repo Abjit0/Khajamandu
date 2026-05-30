@@ -43,14 +43,22 @@ export default function OtpVerification() {
       
       if (response.data.status === "SUCCESS") {
         Alert.alert("Success", "Code sent! Check your Gmail.");
-        setIsOtpSent(true); // Switch to OTP View
+        setIsOtpSent(true);
         setError('');
       } else {
         Alert.alert("Error", response.data.message || "Failed to send code");
       }
     } catch (error: any) {
       console.log("Send Error:", error);
-      Alert.alert("Error", "Could not connect to backend. Check your IP!");
+      if (error.code === 'ECONNABORTED' || error.message?.includes('timeout')) {
+        Alert.alert("Please Wait", "Server is waking up. Please wait 30 seconds and tap Send Code again.");
+      } else if (error.response?.data?.message) {
+        Alert.alert("Error", error.response.data.message);
+      } else if (error.message?.includes('Network Error')) {
+        Alert.alert("No Internet", "Please check your internet connection and try again.");
+      } else {
+        Alert.alert("Error", "Something went wrong. Please try again.");
+      }
     }
     setLoading(false);
   };

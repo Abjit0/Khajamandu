@@ -18,11 +18,20 @@ const COLORS = {
 
 const CART_STORAGE_KEY = '@basket_cart_items';
 
+interface CartItem {
+  id: string;
+  name: string;
+  restaurant: string;
+  price: number;
+  qty: number;
+  image: string;
+}
+
 export default function BasketsScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
   
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   // Load cart from storage on mount

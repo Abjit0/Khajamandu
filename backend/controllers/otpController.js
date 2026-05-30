@@ -1,18 +1,31 @@
-require('dotenv').config();
-const nodemailer = require("nodemailer");
+// Load .env but never override existing environment variables (Render sets these)
+require('dotenv').config({ override: false });
+const axios = require("axios");
 const bcrypt = require('bcryptjs');
 const UserVerification = require("../models/UserVerification");
 const User = require("../models/User"); 
 const { generateToken } = require('../middleware/auth');
 
-// Configure Nodemailer
-let transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-        user: process.env.AUTH_EMAIL,
-        pass: process.env.AUTH_PASS,
-    },
-});
+// Send email via Brevo HTTP API (works on all servers including Render free tier)
+const sendEmail = async (to, subject, htmlContent) => {
+    const response = await axios.post(
+        'https://api.brevo.com/v3/smtp/email',
+        {
+            sender: { name: 'Khajamandu', email: process.env.BREVO_SENDER },
+            to: [{ email: to }],
+            subject: subject,
+            htmlContent: htmlContent,
+        },
+        {
+            headers: {
+                'api-key': process.env.BREVO_API_KEY,
+                'Content-Type': 'application/json',
+            },
+            timeout: 15000,
+        }
+    );
+    return response.data;
+};
 
 // --- FUNCTION 1: USER SIGNUP ---
 const signup = async (req, res) => {
@@ -62,29 +75,27 @@ const signup = async (req, res) => {
         // Send OTP email
         console.log('📧 Attempting to send OTP email to:', email);
         try {
-            await transporter.sendMail({
-                from: process.env.AUTH_EMAIL,
-                to: email,
-                subject: "Khajamandu - Verify Your Account",
-                html: `
-                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                        <h2 style="color: #E6753A;">Welcome to Khajamandu!</h2>
-                        <p>Thank you for joining as a <strong>${role}</strong>.</p>
-                        <p>Your verification code is:</p>
-                        <div style="background: #f5f5f5; padding: 20px; text-align: center; font-size: 24px; font-weight: bold; color: #E6753A;">
-                            ${otp}
-                        </div>
-                        <p>This code will expire in 5 minutes.</p>
-                        ${role !== 'customer' ? '<p><strong>Note:</strong> Your account will be reviewed and approved by our admin team.</p>' : ''}
-                        <p>Best regards,<br>Khajamandu Team</p>
-                    </div>
+            await sendEmail(
+                email,
+                "Khajamandu - Verify Your Account",
                 `
-            });
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                    <h2 style="color: #E6753A;">Welcome to Khajamandu!</h2>
+                    <p>Thank you for joining as a <strong>${role}</strong>.</p>
+                    <p>Your verification code is:</p>
+                    <div style="background: #f5f5f5; padding: 20px; text-align: center; font-size: 32px; font-weight: bold; color: #E6753A; letter-spacing: 8px;">
+                        ${otp}
+                    </div>
+                    <p>This code will expire in 5 minutes.</p>
+                    ${role !== 'customer' ? '<p><strong>Note:</strong> Your account will be reviewed and approved by our admin team.</p>' : ''}
+                    <p>Best regards,<br>Khajamandu Team</p>
+                </div>
+                `
+            );
             console.log('✅ OTP email sent successfully to:', email);
         } catch (emailError) {
             console.error('❌ Email sending failed:', emailError.message);
             // Don't fail the signup, just log the error
-            // User can request resend later
         }
 
         console.log(`✅ User created successfully: ${email} (${role})`);
@@ -113,53 +124,56 @@ const sendOTP = async (req, res) => {
     try {
         let { email } = req.body;
         
+        if (!email) {
+            return res.status(400).json({ status: "FAILED", message: "Email is required" });
+        }
+
+        email = email.trim().toLowerCase();
         console.log('📧 Send OTP request for:', email);
         
-        // Input already sanitized by validation middleware
-        const userId = email; 
         const otp = `${Math.floor(1000 + Math.random() * 9000)}`;
 
         // Delete any existing OTP for this user
-        await UserVerification.deleteMany({ userId });
+        await UserVerification.deleteMany({ userId: email });
 
-        const mailOptions = {
-            from: process.env.AUTH_EMAIL,
-            to: email,
-            subject: "Your Khajamandu Verification Code",
-            html: `
-                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                    <h2 style="color: #E6753A;">Khajamandu Verification</h2>
-                    <p>Your verification code is:</p>
-                    <div style="background: #f5f5f5; padding: 20px; text-align: center; font-size: 24px; font-weight: bold; color: #2D2D2D;">
-                        ${otp}
-                    </div>
-                    <p>This code will expire in 5 minutes.</p>
-                    <p>If you didn't request this code, please ignore this email.</p>
-                </div>
-            `,
-        };
-
+        // Save OTP to database first
         const newVerification = new UserVerification({
-            userId: userId,
+            userId: email,
             email: email,
             otp: otp,
         });
         await newVerification.save();
+        console.log(`🔑 OTP saved for ${email}: ${otp}`);
 
-        console.log('📧 Attempting to send OTP email...');
+        // Try to send email with a hard timeout
         try {
-            await transporter.sendMail(mailOptions);
+            await sendEmail(
+                email,
+                "Your Khajamandu Verification Code",
+                `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                    <h2 style="color: #E6753A;">Khajamandu Verification</h2>
+                    <p>Your verification code is:</p>
+                    <div style="background: #f5f5f5; padding: 20px; text-align: center; font-size: 32px; font-weight: bold; color: #E6753A; letter-spacing: 8px;">
+                        ${otp}
+                    </div>
+                    <p>This code will expire in 5 minutes.</p>
+                    <p>If you didn't request this code, please ignore this email.</p>
+                    <p>Best regards,<br>Khajamandu Team</p>
+                </div>
+                `
+            );
             console.log('✅ OTP email sent successfully to:', email);
-            console.log(`🔑 OTP for ${email}: ${otp}`); // Temporary for testing
         } catch (emailError) {
             console.error('❌ Email sending failed:', emailError.message);
-            // Still save OTP so user can use it if they check backend logs
+            // Don't block the flow - OTP is saved in DB, user can still verify
         }
         
         res.status(200).json({ 
             status: "SUCCESS", 
-            message: "Verification code sent to your email" 
+            message: "Verification code sent to your email"
         });
+
     } catch (error) {
         console.error('Send OTP Error:', error);
         res.status(500).json({ 

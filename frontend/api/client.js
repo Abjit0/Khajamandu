@@ -5,15 +5,13 @@ import { Platform } from 'react-native';
 // Simple, reliable API URL configuration
 const getApiUrl = () => {
     // PRODUCTION: Using live Render backend
-    const RENDER_URL = 'https://khajamandu-backend.onrender.com/api';
-    
-    // DEVELOPMENT: Uncomment these lines for local testing
+    return 'https://khajamandu-backend.onrender.com/api';
+
+    // LOCAL DEVELOPMENT - uncomment when running backend locally
     // if (Platform.OS === 'web') {
     //     return 'http://localhost:5000/api';
     // }
-    // return 'http://192.168.101.4:5000/api';
-    
-    return RENDER_URL;
+    // return 'http://192.168.101.5:5000/api';
 };
 
 const API_URL = getApiUrl();
@@ -23,7 +21,7 @@ console.log('🔗 API URL:', API_URL);
 
 export const client = axios.create({
     baseURL: API_URL,
-    timeout: 20000, // Increased timeout
+    timeout: 60000, // 60 seconds - enough for Render free tier to wake up
     headers: {
         'Content-Type': 'application/json',
     }

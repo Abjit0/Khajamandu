@@ -2,7 +2,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const helmet = require('helmet');
-require('dotenv').config();
+
+// Load .env but never override existing environment variables (Render sets these)
+require('dotenv').config({ override: false });
 
 // Import Routes & Controllers
 const otpRoutes = require('./routes/otpRoutes');
